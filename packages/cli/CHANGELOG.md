@@ -1,5 +1,11 @@
 # @smicolon/ai-kit
 
+## 0.2.1
+
+### Patch Changes
+
+- 503ebcb: Fix gitignore: only ignore local files (_.local._), not entire tool directories — installed packs should be committed
+
 ## 0.2.0
 
 ### Minor Changes
