@@ -1,5 +1,11 @@
 # @smicolon/ai-kit
 
+## 0.1.1
+
+### Patch Changes
+
+- 2a3b081: Fix npm package: include packs and marketplace.json in published package
+
 ## 0.1.0
 
 ### Minor Changes
