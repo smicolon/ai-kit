@@ -1,5 +1,11 @@
 # @smicolon/ai-kit
 
+## 0.2.0
+
+### Minor Changes
+
+- 4d86902: UX improvements: searchable prompts, global tool config, add works without init, search command
+
 ## 0.1.1
 
 ### Patch Changes
