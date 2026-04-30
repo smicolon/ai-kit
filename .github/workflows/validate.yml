@@ -1,0 +1,84 @@
+name: Marketplace Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code CLI (pinned)
+        run: |
+          echo "::group::Installing @anthropic-ai/claude-code@2.1.123"
+          npm install -g @anthropic-ai/claude-code@2.1.123
+          claude --version
+          echo "::endgroup::"
+
+      - name: Validate .claude-plugin/marketplace.json
+        id: validate
+        run: |
+          set -o pipefail
+          echo "::group::Running 'claude plugin validate .'"
+          if claude plugin validate . 2>&1 | tee /tmp/validate.log; then
+            echo "::endgroup::"
+            echo ""
+            echo "=========================================="
+            echo "[PASS] Marketplace manifest is valid."
+            echo "=========================================="
+            {
+              echo "## Marketplace Validation: PASSED"
+              echo ""
+              echo "\`\`\`.claude-plugin/marketplace.json\`\`\` validated successfully against the Claude Code marketplace schema."
+              echo ""
+              echo "<details><summary>Validator output</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/validate.log
+              echo '```'
+              echo ""
+              echo "</details>"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::endgroup::"
+            echo ""
+            echo "=========================================="
+            echo "[FAIL] Marketplace manifest is INVALID."
+            echo "Do NOT merge this PR until fixed."
+            echo "=========================================="
+            echo "::error file=.claude-plugin/marketplace.json,title=Marketplace Validation Failed::Manifest does not match the Claude Code marketplace schema. See the run summary for details. Reproduce locally with: npm install -g @anthropic-ai/claude-code@2.1.123 && claude plugin validate ."
+            {
+              echo "## Marketplace Validation: FAILED"
+              echo ""
+              echo "**Do NOT merge this PR until \`.claude-plugin/marketplace.json\` is fixed.**"
+              echo ""
+              echo "### Reproduce locally"
+              echo ""
+              echo '```bash'
+              echo "npm install -g @anthropic-ai/claude-code@2.1.123"
+              echo "claude plugin validate ."
+              echo '```'
+              echo ""
+              echo "### Validator output"
+              echo ""
+              echo '```'
+              cat /tmp/validate.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi

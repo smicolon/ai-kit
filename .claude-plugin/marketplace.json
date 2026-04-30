@@ -2,7 +2,6 @@
   "name": "smicolon-marketplace",
   "version": "2.8.0",
   "description": "Official marketplace for Smicolon development standards - 15 plugins with 30 agents, 46 skills, pre-implementation clarification, Infisical secret management, TanStack SPA, Better Auth, onboarding, and TDD dev loops",
-  "license": "MIT",
   "metadata": {
     "description": "Official marketplace for Smicolon development standards - 15 plugins with 30 specialized agents, 46 auto-enforcing skills, pre-implementation flow clarification, Infisical secret management, intelligent engineer onboarding, TanStack Router SPA development, Better Auth integration, Hono Edge framework, Flutter mobile, git worktree management, persistent failure memory, and TDD-based dev loops for Django, NestJS, Next.js, Nuxt.js, Hono, Flutter, TanStack, and system architecture"
   },
@@ -11,7 +10,6 @@
     "email": "dev@smicolon.com",
     "url": "https://github.com/smicolon"
   },
-  "repository": "https://github.com/smicolon/ai-kit",
   "plugins": [
     {
       "name": "dev-loop",
