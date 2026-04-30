@@ -19,15 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install Claude Code CLI (pinned)
+      - name: Install Claude Code CLI (pinned, native)
         run: |
-          echo "::group::Installing @anthropic-ai/claude-code@2.1.123"
-          npm install -g @anthropic-ai/claude-code@2.1.123
-          claude --version
+          echo "::group::Installing Claude Code CLI 2.1.123 (native installer)"
+          curl -fsSL https://claude.ai/install.sh | bash -s 2.1.123
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/claude" --version
           echo "::endgroup::"
 
       - name: Validate .claude-plugin/marketplace.json
@@ -61,7 +58,7 @@ jobs:
             echo "[FAIL] Marketplace manifest is INVALID."
             echo "Do NOT merge this PR until fixed."
             echo "=========================================="
-            echo "::error file=.claude-plugin/marketplace.json,title=Marketplace Validation Failed::Manifest does not match the Claude Code marketplace schema. See the run summary for details. Reproduce locally with: npm install -g @anthropic-ai/claude-code@2.1.123 && claude plugin validate ."
+            echo "::error file=.claude-plugin/marketplace.json,title=Marketplace Validation Failed::Manifest does not match the Claude Code marketplace schema. See the run summary for details. Reproduce locally with: curl -fsSL https://claude.ai/install.sh | bash -s 2.1.123 && claude plugin validate ."
             {
               echo "## Marketplace Validation: FAILED"
               echo ""
@@ -70,7 +67,7 @@ jobs:
               echo "### Reproduce locally"
               echo ""
               echo '```bash'
-              echo "npm install -g @anthropic-ai/claude-code@2.1.123"
+              echo "curl -fsSL https://claude.ai/install.sh | bash -s 2.1.123"
               echo "claude plugin validate ."
               echo '```'
               echo ""
