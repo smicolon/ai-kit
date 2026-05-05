@@ -1,9 +1,9 @@
 {
   "name": "smicolon-marketplace",
-  "version": "2.8.0",
-  "description": "Official marketplace for Smicolon development standards - 15 plugins with 30 agents, 46 skills, pre-implementation clarification, Infisical secret management, TanStack SPA, Better Auth, onboarding, and TDD dev loops",
+  "version": "2.9.0",
+  "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 agents, 46 skills, four-axis React/Next.js branch review, pre-implementation clarification, Infisical secret management, TanStack SPA, Better Auth, onboarding, and TDD dev loops",
   "metadata": {
-    "description": "Official marketplace for Smicolon development standards - 15 plugins with 30 specialized agents, 46 auto-enforcing skills, pre-implementation flow clarification, Infisical secret management, intelligent engineer onboarding, TanStack Router SPA development, Better Auth integration, Hono Edge framework, Flutter mobile, git worktree management, persistent failure memory, and TDD-based dev loops for Django, NestJS, Next.js, Nuxt.js, Hono, Flutter, TanStack, and system architecture"
+    "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 specialized agents, 46 auto-enforcing skills, four-axis React/Next.js branch review (architecture, performance, accessibility, UI), pre-implementation flow clarification, Infisical secret management, intelligent engineer onboarding, TanStack Router SPA development, Better Auth integration, Hono Edge framework, Flutter mobile, git worktree management, persistent failure memory, and TDD-based dev loops for Django, NestJS, Next.js, Nuxt.js, Hono, Flutter, TanStack, and system architecture"
   },
   "owner": {
     "name": "Smicolon Development Team",
@@ -560,6 +560,37 @@
         "./skills/flow-detector/SKILL.md",
         "./skills/flow-selector/SKILL.md",
         "./skills/execution-context-builder/SKILL.md"
+      ]
+    },
+    {
+      "name": "react-review",
+      "version": "0.1.0",
+      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only — does not modify code.",
+      "source": "./packs/react-review",
+      "author": {
+        "name": "Smicolon",
+        "email": "dev@smicolon.com",
+        "url": "https://github.com/smicolon"
+      },
+      "homepage": "https://github.com/smicolon/ai-kit",
+      "repository": "https://github.com/smicolon/ai-kit",
+      "license": "MIT",
+      "category": "frontend",
+      "keywords": [
+        "code-review",
+        "pr-review",
+        "react",
+        "nextjs",
+        "tanstack-query",
+        "accessibility",
+        "performance",
+        "refactoring"
+      ],
+      "commands": [
+        "./commands/review-arch.md",
+        "./commands/review-perf.md",
+        "./commands/review-a11y.md",
+        "./commands/review-ui.md"
       ]
     }
   ]
