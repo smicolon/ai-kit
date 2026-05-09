@@ -1,5 +1,11 @@
 # @smicolon/ai-kit
 
+## 0.5.1
+
+### Patch Changes
+
+- 1f6b6c0: Fix skill resolver after marketplace skill entries became directory-shaped. Previously `discovery.ts` ran `path.dirname()` on each entry assuming it ended with `SKILL.md`; with the new shape this stripped the actual skill name and `installer.ts` collided every skill in a pack at `.claude/skills/skills`.
+
 ## 0.5.0
 
 ### Minor Changes
