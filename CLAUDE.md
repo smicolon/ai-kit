@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This repository is a **Claude Code Marketplace** providing independent plugins for enforcing Smicolon company-wide development standards across Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and more. Each plugin includes specialized agents and hooks that automatically inject conventions and validate code. The current pack list is the source of truth in `.claude-plugin/marketplace.json`.
+This repository is an open-source **Claude Code Marketplace** maintained by Smicolon, providing independent plugins that bundle conventions, agents, skills, commands, hooks, and rules for popular stacks (Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and more). Plugins ship best-practice defaults; teams adopt or override them as they see fit. The current pack list is the source of truth in `.claude-plugin/marketplace.json`.
 
 ## Development Environment
 
