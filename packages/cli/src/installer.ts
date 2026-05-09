@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { ComponentType, InstallOptions, InstallResult, ToolId } from './types.js'
-import { TOOL_REGISTRY, CANONICAL_SKILLS_DIR } from './tools.js'
+import type { ComponentType, InstallOptions, InstallResult, ResolvedPack, ToolId } from './types.js'
+import { TOOL_REGISTRY, TOOL_IDS, CANONICAL_SKILLS_DIR } from './tools.js'
 import { convertToMdc } from './converters/cursor-mdc.js'
 
 /** Tracks all created files relative to projectDir */
@@ -290,5 +290,54 @@ function isSymlink(p: string): boolean {
   } catch {
     return false
   }
+}
+
+/**
+ * Find files on disk that look like they were installed by this pack but
+ * are not tracked in .ai-kit.json. Used by `remove` to clean up orphans
+ * left behind when the project manifest was reset or never tracked them
+ * (e.g. installed by an older CLI version).
+ *
+ * Returns absolute paths. Hooks are skipped because they merge into a
+ * shared .claude/hooks.json and can't be safely attributed to one pack.
+ */
+export function findOrphans(pack: ResolvedPack, projectDir: string): string[] {
+  const candidates = new Set<string>()
+
+  for (const skillDir of pack.skills) {
+    const skillName = path.basename(skillDir)
+    candidates.add(path.join(projectDir, CANONICAL_SKILLS_DIR, skillName))
+    for (const toolId of TOOL_IDS) {
+      const toolSkillsDir = TOOL_REGISTRY[toolId].components.skills
+      if (toolSkillsDir) {
+        candidates.add(path.join(projectDir, toolSkillsDir, skillName))
+      }
+    }
+  }
+
+  const addPerTool = (
+    files: string[],
+    component: Exclude<ComponentType, 'skills' | 'hooks'>,
+  ) => {
+    for (const file of files) {
+      const base = path.basename(file)
+      for (const toolId of TOOL_IDS) {
+        const dir = TOOL_REGISTRY[toolId].components[component]
+        if (!dir) continue
+        if (component === 'rules' && toolId === 'cursor') {
+          const mdcName = path.basename(file, '.md') + '.mdc'
+          candidates.add(path.join(projectDir, dir, mdcName))
+        } else {
+          candidates.add(path.join(projectDir, dir, base))
+        }
+      }
+    }
+  }
+
+  addPerTool(pack.agents, 'agents')
+  addPerTool(pack.commands, 'commands')
+  addPerTool(pack.rules, 'rules')
+
+  return [...candidates].filter(p => fs.existsSync(p) || isSymlink(p))
 }
 
