@@ -4,7 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This repository is an open-source **Claude Code Marketplace** maintained by Smicolon, providing independent plugins that bundle conventions, agents, skills, commands, hooks, and rules for popular stacks (Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and more). Plugins ship best-practice defaults; teams adopt or override them as they see fit. The current pack list is the source of truth in `.claude-plugin/marketplace.json`.
+This repository is an open-source toolkit maintained by Smicolon that ships convention packs (agents, skills, commands, hooks, rules) for popular stacks (Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and more). Each pack bundles best-practice defaults teams can adopt or override.
+
+It can be consumed in two ways:
+
+1. **As a Claude Code marketplace** — `/plugin marketplace add github.com/smicolon/ai-kit` then `/plugin install <pack>`. Picks up updates through Claude Code's plugin system.
+2. **As a standalone CLI (`@smicolon/ai-kit`)** — `bunx @smicolon/ai-kit add <pack>` (or via npm/Homebrew binary) installs packs per-project into `.claude/`, `.cursor/`, `.windsurf/`, `.codex/`, etc. Works with any AI coding tool listed in `packages/cli/src/tools.ts`, not just Claude Code. Per-project state lives in `.ai-kit.json`.
+
+Both consumption paths read the same source of truth: `.claude-plugin/marketplace.json` and the pack contents in `packs/`.
 
 ## Development Environment
 
