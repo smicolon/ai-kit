@@ -4,7 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This repository is a **Claude Code Marketplace** providing 11 independent plugins for enforcing Smicolon company-wide development standards across Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and failure memory. Each plugin includes specialized agents and hooks that automatically inject conventions and validate code.
+This repository is a **Claude Code Marketplace** providing independent plugins for enforcing Smicolon company-wide development standards across Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Flutter, system architecture, dev loops, and more. Each plugin includes specialized agents and hooks that automatically inject conventions and validate code. The current pack list is the source of truth in `.claude-plugin/marketplace.json`.
+
+## Development Environment
+
+Notes for any AI agent (Claude Code, Cursor Cloud, Codex, etc.) working in this repo. The same content is exposed as `AGENTS.md` (symlink to this file) so tools that look for `AGENTS.md` see it too.
+
+### Repo shape
+
+- **Bun workspaces + Turborepo monorepo.** Bun is the only supported package manager — do **not** use npm, yarn, or pnpm. The lockfile is `bun.lock`.
+- **`packages/cli/`** is the only buildable package: a TypeScript CLI (`@smicolon/ai-kit`) built with tsup, ESM-only (`"type": "module"`), targeting Node 22+. Do not introduce CommonJS patterns.
+- **`packs/`** holds convention packs as Markdown (agents, skills, commands, rules, hooks). They are consumed by AI coding tools, not executed directly — editing them only requires Markdown.
+
+### Common scripts
+
+| Task | Command |
+|------|---------|
+| Install deps | `bun install` |
+| Typecheck CLI | `bun run --filter @smicolon/ai-kit typecheck` |
+| Build CLI | `bun run --filter @smicolon/ai-kit build` |
+| Watch / dev mode | `bun run --filter @smicolon/ai-kit dev` |
+| Smoke-test built CLI | `node packages/cli/dist/index.js --help` |
+| Validate marketplace | `claude plugin validate .` |
+
+### Caveats
+
+- There are **no automated test suites or lint scripts** in this repo. CI runs only `typecheck` and `build`. If you need to verify CLI behaviour, write an ad-hoc shell harness against `dist/index.js` (see PR #17 for examples).
+- Plugin patch versions auto-bump in CI based on changed files under `packs/<name>/`. Marketplace-only changes do **not** trigger auto-bump — bump manually if a fix needs to ship to installed users.
+- `.ai-kit.json` (per-project) and `~/.config/ai-kit/config.json` (global tool list) are both still in active use. Don't conflate them.
 
 ## Core Architecture
 
