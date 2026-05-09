@@ -13,43 +13,56 @@ export const removeCommand = new Command('remove')
     const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
     const config = readConfig(projectDir)
     const packConfig = config?.packs[packName]
+    const trackedFiles = packConfig?.files ?? []
 
-    if (packConfig) {
-      const files = packConfig.files ?? []
-      if (files.length === 0) {
-        console.log(pc.yellow(`No tracked files for "${packName}". Removing from config only.`))
-      } else {
-        const removed = removePack(projectDir, files)
-        console.log(pc.green(`Removed ${removed} file(s) for ${packName}`))
-      }
+    if (trackedFiles.length > 0) {
+      const removed = removePack(projectDir, trackedFiles)
+      console.log(pc.green(`Removed ${removed} file(s) for ${packName}`))
       writeConfig(projectDir, removeFromConfig(config!, packName))
       console.log(pc.dim('Config updated.'))
       return
     }
 
-    // Fallback: pack isn't tracked in .ai-kit.json (older install or manifest
-    // reset). Look up the pack in the marketplace and clean up anything on
-    // disk that matches the install layout.
+    // No tracked files — either pack isn't in .ai-kit.json at all, or the
+    // entry predates file tracking. Either way, look the pack up in the
+    // marketplace and clean any orphan files that provably came from it.
     const pack = await findPack(packName)
     if (!pack) {
+      const installed = config && Object.keys(config.packs).length > 0
+        ? '\nInstalled: ' + Object.keys(config.packs).join(', ')
+        : ''
       console.error(
         pc.red(`Pack "${packName}" is not installed and not found in the marketplace.`) +
-        (config && Object.keys(config.packs).length > 0
-          ? '\nInstalled: ' + Object.keys(config.packs).join(', ')
-          : ''),
+        installed,
       )
       process.exit(1)
     }
 
     const orphans = findOrphans(pack, projectDir)
+
+    if (packConfig) {
+      console.log(pc.yellow(
+        `"${packName}" has no tracked files in .ai-kit.json (legacy install).`,
+      ))
+    }
+
     if (orphans.length === 0) {
-      console.log(pc.dim(`Nothing to remove for "${packName}" — no tracked entry and no orphan files found.`))
+      if (packConfig) {
+        writeConfig(projectDir, removeFromConfig(config!, packName))
+        console.log(pc.dim('Config entry removed; nothing to clean on disk.'))
+      } else {
+        console.log(pc.dim(`Nothing to remove for "${packName}" — no tracked entry and no orphan files found.`))
+      }
       return
     }
 
-    console.log(pc.yellow(
-      `"${packName}" not in .ai-kit.json — found ${orphans.length} orphan file(s) to clean up:`,
-    ))
+    if (!packConfig) {
+      console.log(pc.yellow(
+        `"${packName}" not in .ai-kit.json — found ${orphans.length} orphan file(s) to clean up:`,
+      ))
+    } else {
+      console.log(pc.yellow(`Found ${orphans.length} orphan file(s):`))
+    }
     for (const p of orphans) {
       console.log(pc.dim('  ' + path.relative(projectDir, p)))
     }
@@ -57,4 +70,9 @@ export const removeCommand = new Command('remove')
     const relPaths = orphans.map(p => path.relative(projectDir, p))
     const removed = removePack(projectDir, relPaths)
     console.log(pc.green(`Removed ${removed} orphan file(s) for ${packName}`))
+
+    if (packConfig) {
+      writeConfig(projectDir, removeFromConfig(config!, packName))
+      console.log(pc.dim('Config updated.'))
+    }
   })

@@ -351,14 +351,27 @@ export function findOrphans(pack: ResolvedPack, projectDir: string): string[] {
         let expected: Buffer
 
         if (component === 'rules' && toolId === 'cursor') {
+          // Current install writes .mdc via convertToMdc.
           const mdcName = path.basename(sourceFile, '.md') + '.mdc'
           destPath = path.join(projectDir, dir, mdcName)
           expected = Buffer.from(convertToMdc(sourceFile, pack.name))
-        } else {
-          destPath = path.join(projectDir, dir, base)
-          try { expected = fs.readFileSync(sourceFile) }
-          catch { continue }
+          if (fileContentEquals(destPath, expected)) orphans.push(destPath)
+
+          // Legacy CLI versions (pre c0b8ba6) copied cursor rules as plain
+          // .md without conversion. Catch those too.
+          const legacyPath = path.join(projectDir, dir, base)
+          try {
+            const legacyExpected = fs.readFileSync(sourceFile)
+            if (fileContentEquals(legacyPath, legacyExpected)) {
+              orphans.push(legacyPath)
+            }
+          } catch { /* source unreadable — skip */ }
+          continue
         }
+
+        destPath = path.join(projectDir, dir, base)
+        try { expected = fs.readFileSync(sourceFile) }
+        catch { continue }
 
         if (fileContentEquals(destPath, expected)) {
           orphans.push(destPath)
