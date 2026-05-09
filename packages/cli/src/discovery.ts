@@ -40,11 +40,8 @@ function resolvePack(
       .map(f => path.join(rulesDir, f))
   }
 
-  // For skills, resolve to the parent directory (containing SKILL.md)
-  const skills = (plugin.skills ?? []).map(s => {
-    const skillMdPath = path.resolve(sourceDir, s)
-    return path.dirname(skillMdPath)
-  })
+  // Skills entries point at the skill directory (containing SKILL.md).
+  const skills = (plugin.skills ?? []).map(s => path.resolve(sourceDir, s))
 
   return {
     name: plugin.name,
