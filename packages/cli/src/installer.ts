@@ -293,51 +293,138 @@ function isSymlink(p: string): boolean {
 }
 
 /**
- * Find files on disk that look like they were installed by this pack but
- * are not tracked in .ai-kit.json. Used by `remove` to clean up orphans
- * left behind when the project manifest was reset or never tracked them
- * (e.g. installed by an older CLI version).
+ * Find files on disk that were installed by this pack but are not tracked
+ * in .ai-kit.json. Used by `remove` to clean up orphans left behind when
+ * the project manifest was reset or never tracked them (e.g. installed by
+ * an older CLI version).
  *
- * Returns absolute paths. Hooks are skipped because they merge into a
- * shared .claude/hooks.json and can't be safely attributed to one pack.
+ * SAFETY: only returns paths that provably came from this pack:
+ *   - Files: byte-equal to the pack's source content (after applying the
+ *     same install transform — e.g. convertToMdc for cursor rules).
+ *   - Skill directories: every file inside matches a source file with the
+ *     same content; extra files mean the user touched it — skip.
+ *   - Symlinks: target resolves into the canonical .agents/skills/<name>
+ *     dir we own.
+ *
+ * Hooks are skipped because they merge into a shared .claude/hooks.json
+ * and can't be safely attributed to one pack.
  */
 export function findOrphans(pack: ResolvedPack, projectDir: string): string[] {
-  const candidates = new Set<string>()
+  const orphans: string[] = []
+  const canonicalBase = path.join(projectDir, CANONICAL_SKILLS_DIR)
 
-  for (const skillDir of pack.skills) {
-    const skillName = path.basename(skillDir)
-    candidates.add(path.join(projectDir, CANONICAL_SKILLS_DIR, skillName))
+  for (const sourceSkillDir of pack.skills) {
+    const skillName = path.basename(sourceSkillDir)
+    const canonicalDest = path.join(canonicalBase, skillName)
+
+    if (skillDirMatchesSource(canonicalDest, sourceSkillDir)) {
+      orphans.push(canonicalDest)
+    }
+
     for (const toolId of TOOL_IDS) {
       const toolSkillsDir = TOOL_REGISTRY[toolId].components.skills
-      if (toolSkillsDir) {
-        candidates.add(path.join(projectDir, toolSkillsDir, skillName))
+      if (!toolSkillsDir) continue
+      const linkPath = path.join(projectDir, toolSkillsDir, skillName)
+      if (path.resolve(linkPath) === path.resolve(canonicalDest)) continue
+      if (symlinkPointsInto(linkPath, canonicalDest)) {
+        orphans.push(linkPath)
+      } else if (
+        !isSymlink(linkPath) &&
+        skillDirMatchesSource(linkPath, sourceSkillDir)
+      ) {
+        orphans.push(linkPath)
       }
     }
   }
 
-  const addPerTool = (
-    files: string[],
+  const collectFiles = (
+    sourceFiles: string[],
     component: Exclude<ComponentType, 'skills' | 'hooks'>,
   ) => {
-    for (const file of files) {
-      const base = path.basename(file)
+    for (const sourceFile of sourceFiles) {
+      const base = path.basename(sourceFile)
       for (const toolId of TOOL_IDS) {
         const dir = TOOL_REGISTRY[toolId].components[component]
         if (!dir) continue
+
+        let destPath: string
+        let expected: Buffer
+
         if (component === 'rules' && toolId === 'cursor') {
-          const mdcName = path.basename(file, '.md') + '.mdc'
-          candidates.add(path.join(projectDir, dir, mdcName))
+          const mdcName = path.basename(sourceFile, '.md') + '.mdc'
+          destPath = path.join(projectDir, dir, mdcName)
+          expected = Buffer.from(convertToMdc(sourceFile, pack.name))
         } else {
-          candidates.add(path.join(projectDir, dir, base))
+          destPath = path.join(projectDir, dir, base)
+          try { expected = fs.readFileSync(sourceFile) }
+          catch { continue }
+        }
+
+        if (fileContentEquals(destPath, expected)) {
+          orphans.push(destPath)
         }
       }
     }
   }
 
-  addPerTool(pack.agents, 'agents')
-  addPerTool(pack.commands, 'commands')
-  addPerTool(pack.rules, 'rules')
+  collectFiles(pack.agents, 'agents')
+  collectFiles(pack.commands, 'commands')
+  collectFiles(pack.rules, 'rules')
 
-  return [...candidates].filter(p => fs.existsSync(p) || isSymlink(p))
+  return [...new Set(orphans)]
+}
+
+function fileContentEquals(filePath: string, expected: Buffer): boolean {
+  try {
+    if (!fs.existsSync(filePath) || isSymlink(filePath)) return false
+    const stat = fs.statSync(filePath)
+    if (!stat.isFile()) return false
+    return fs.readFileSync(filePath).equals(expected)
+  } catch {
+    return false
+  }
+}
+
+function symlinkPointsInto(linkPath: string, expectedDir: string): boolean {
+  try {
+    if (!isSymlink(linkPath)) return false
+    const resolved = path.resolve(path.dirname(linkPath), fs.readlinkSync(linkPath))
+    return path.resolve(resolved) === path.resolve(expectedDir)
+  } catch {
+    return false
+  }
+}
+
+function skillDirMatchesSource(destDir: string, sourceDir: string): boolean {
+  if (!fs.existsSync(destDir) || isSymlink(destDir)) return false
+  if (!fs.statSync(destDir).isDirectory()) return false
+
+  const sourceFiles = collectRelativeFiles(sourceDir)
+  const destFiles = collectRelativeFiles(destDir)
+
+  if (sourceFiles.length !== destFiles.length) return false
+  const sourceSet = new Set(sourceFiles)
+  for (const f of destFiles) if (!sourceSet.has(f)) return false
+
+  for (const rel of sourceFiles) {
+    const src = fs.readFileSync(path.join(sourceDir, rel))
+    const dst = fs.readFileSync(path.join(destDir, rel))
+    if (!src.equals(dst)) return false
+  }
+  return true
+}
+
+function collectRelativeFiles(dir: string, base = dir): string[] {
+  const out: string[] = []
+  if (!fs.existsSync(dir)) return out
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      out.push(...collectRelativeFiles(full, base))
+    } else if (entry.isFile()) {
+      out.push(path.relative(base, full))
+    }
+  }
+  return out.sort()
 }
 
