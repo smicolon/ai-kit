@@ -13,7 +13,7 @@
   "plugins": [
     {
       "name": "dev-loop",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "description": "Autonomous TDD development loops with planning phase and iterative coding",
       "source": "./packs/dev-loop",
       "author": {
@@ -44,7 +44,7 @@
     },
     {
       "name": "django",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "description": "Django standards with 5 agents and 8 auto-enforcing skills",
       "source": "./packs/django",
       "author": {
@@ -91,7 +91,7 @@
     },
     {
       "name": "nestjs",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "description": "NestJS standards with 3 agents and 2 auto-enforcing skills",
       "source": "./packs/nestjs",
       "author": {
@@ -126,7 +126,7 @@
     },
     {
       "name": "nextjs",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "description": "Next.js standards with 4 agents, 3 auto-enforcing skills, and visual QA",
       "source": "./packs/nextjs",
       "author": {
@@ -164,7 +164,7 @@
     },
     {
       "name": "nuxtjs",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "description": "Nuxt.js standards with 3 agents, 3 auto-enforcing skills, and visual QA",
       "source": "./packs/nuxtjs",
       "author": {
@@ -231,7 +231,7 @@
     },
     {
       "name": "failure-log",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Persistent failure memory that tracks mistakes and prevents repeating them across sessions",
       "source": "./packs/failure-log",
       "author": {
@@ -260,7 +260,7 @@
     },
     {
       "name": "flutter",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Flutter development with Fastlane automation, store publishing, and architecture patterns",
       "source": "./packs/flutter",
       "author": {
@@ -302,7 +302,7 @@
     },
     {
       "name": "hono",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Hono Edge framework standards with 4 agents and 4 auto-enforcing skills for Bun and Cloudflare Workers",
       "source": "./packs/hono",
       "author": {
@@ -344,7 +344,7 @@
     },
     {
       "name": "tanstack-router",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "TanStack Router SPA development with 3 agents, 11 skills for React SPAs using TanStack ecosystem",
       "source": "./packs/tanstack-router",
       "author": {
@@ -395,7 +395,7 @@
     },
     {
       "name": "better-auth",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Better Auth integration with 1 agent, 2 skills, and MCP server for authentication",
       "source": "./packs/better-auth",
       "author": {
@@ -431,7 +431,7 @@
     },
     {
       "name": "worktree",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "description": "Git worktree manager for parallel development with automatic env copying and dependency installation",
       "source": "./packs/worktree",
       "author": {
@@ -459,7 +459,7 @@
     },
     {
       "name": "onboard",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Intelligent engineer onboarding with personalized guidance based on skills, project analysis, and first task",
       "source": "./packs/onboard",
       "author": {
@@ -490,7 +490,7 @@
     },
     {
       "name": "infisical",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Infisical secret management with 1 agent, 3 auto-enforcing skills, and CI/CD integration for cloud and self-hosted instances",
       "source": "./packs/infisical",
       "author": {
@@ -530,7 +530,7 @@
     },
     {
       "name": "clarify",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Pre-implementation clarification: detect ambiguity in tasks and produce a structured execution context before code is written",
       "source": "./packs/clarify",
       "author": {
@@ -565,7 +565,7 @@
     {
       "name": "react-review",
       "version": "0.1.1",
-      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only — does not modify code.",
+      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only \u2014 does not modify code.",
       "source": "./packs/react-review",
       "author": {
         "name": "Smicolon",
