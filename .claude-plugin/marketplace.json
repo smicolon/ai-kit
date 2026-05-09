@@ -39,7 +39,7 @@
         "./commands/cancel-dev.md"
       ],
       "skills": [
-        "./skills/tdd-planner/SKILL.md"
+        "./skills/tdd-planner"
       ]
     },
     {
@@ -79,14 +79,14 @@
         "./commands/test-generate.md"
       ],
       "skills": [
-        "./skills/import-convention-enforcer/SKILL.md",
-        "./skills/model-entity-validator/SKILL.md",
-        "./skills/security-first-validator/SKILL.md",
-        "./skills/test-coverage-advisor/SKILL.md",
-        "./skills/performance-optimizer/SKILL.md",
-        "./skills/migration-safety-checker/SKILL.md",
-        "./skills/test-validity-checker/SKILL.md",
-        "./skills/red-phase-verifier/SKILL.md"
+        "./skills/import-convention-enforcer",
+        "./skills/model-entity-validator",
+        "./skills/security-first-validator",
+        "./skills/test-coverage-advisor",
+        "./skills/performance-optimizer",
+        "./skills/migration-safety-checker",
+        "./skills/test-validity-checker",
+        "./skills/red-phase-verifier"
       ]
     },
     {
@@ -120,8 +120,8 @@
         "./commands/module-create.md"
       ],
       "skills": [
-        "./skills/barrel-export-manager/SKILL.md",
-        "./skills/import-convention-enforcer/SKILL.md"
+        "./skills/barrel-export-manager",
+        "./skills/import-convention-enforcer"
       ]
     },
     {
@@ -157,9 +157,9 @@
         "./commands/component-create.md"
       ],
       "skills": [
-        "./skills/accessibility-validator/SKILL.md",
-        "./skills/react-form-validator/SKILL.md",
-        "./skills/import-convention-enforcer/SKILL.md"
+        "./skills/accessibility-validator",
+        "./skills/react-form-validator",
+        "./skills/import-convention-enforcer"
       ]
     },
     {
@@ -195,9 +195,9 @@
         "./commands/component-create.md"
       ],
       "skills": [
-        "./skills/accessibility-validator/SKILL.md",
-        "./skills/veevalidate-form-validator/SKILL.md",
-        "./skills/import-convention-enforcer/SKILL.md"
+        "./skills/accessibility-validator",
+        "./skills/veevalidate-form-validator",
+        "./skills/import-convention-enforcer"
       ]
     },
     {
@@ -255,7 +255,7 @@
         "./commands/failure-list.md"
       ],
       "skills": [
-        "./skills/failure-log-manager/SKILL.md"
+        "./skills/failure-log-manager"
       ]
     },
     {
@@ -295,9 +295,9 @@
         "./commands/signing-setup.md"
       ],
       "skills": [
-        "./skills/flutter-architecture/SKILL.md",
-        "./skills/fastlane-knowledge/SKILL.md",
-        "./skills/store-publishing/SKILL.md"
+        "./skills/flutter-architecture",
+        "./skills/fastlane-knowledge",
+        "./skills/store-publishing"
       ]
     },
     {
@@ -336,10 +336,10 @@
         "./commands/rpc-client.md"
       ],
       "skills": [
-        "./skills/hono-patterns/SKILL.md",
-        "./skills/cloudflare-bindings/SKILL.md",
-        "./skills/zod-validation/SKILL.md",
-        "./skills/rpc-typesafe/SKILL.md"
+        "./skills/hono-patterns",
+        "./skills/cloudflare-bindings",
+        "./skills/zod-validation",
+        "./skills/rpc-typesafe"
       ]
     },
     {
@@ -380,17 +380,17 @@
         "./commands/table-create.md"
       ],
       "skills": [
-        "./skills/router-patterns/SKILL.md",
-        "./skills/query-patterns/SKILL.md",
-        "./skills/form-patterns/SKILL.md",
-        "./skills/table-patterns/SKILL.md",
-        "./skills/virtual-patterns/SKILL.md",
-        "./skills/store-patterns/SKILL.md",
-        "./skills/db-patterns/SKILL.md",
-        "./skills/ai-patterns/SKILL.md",
-        "./skills/pacer-patterns/SKILL.md",
-        "./skills/devtools-patterns/SKILL.md",
-        "./skills/tanstack-conventions/SKILL.md"
+        "./skills/router-patterns",
+        "./skills/query-patterns",
+        "./skills/form-patterns",
+        "./skills/table-patterns",
+        "./skills/virtual-patterns",
+        "./skills/store-patterns",
+        "./skills/db-patterns",
+        "./skills/ai-patterns",
+        "./skills/pacer-patterns",
+        "./skills/devtools-patterns",
+        "./skills/tanstack-conventions"
       ]
     },
     {
@@ -424,8 +424,8 @@
         "./commands/auth-provider-add.md"
       ],
       "skills": [
-        "./skills/better-auth-patterns/SKILL.md",
-        "./skills/auth-security/SKILL.md"
+        "./skills/better-auth-patterns",
+        "./skills/auth-security"
       ],
       "mcpServers": "./.mcp.json"
     },
@@ -454,7 +454,7 @@
         "./commands/wt.md"
       ],
       "skills": [
-        "./skills/worktree-manager/SKILL.md"
+        "./skills/worktree-manager"
       ]
     },
     {
@@ -485,7 +485,7 @@
         "./commands/onboard.md"
       ],
       "skills": [
-        "./skills/onboard-context-provider/SKILL.md"
+        "./skills/onboard-context-provider"
       ]
     },
     {
@@ -523,9 +523,9 @@
         "./commands/infisical-ci-setup.md"
       ],
       "skills": [
-        "./skills/infisical-patterns/SKILL.md",
-        "./skills/infisical-ci-integration/SKILL.md",
-        "./skills/secret-hygiene/SKILL.md"
+        "./skills/infisical-patterns",
+        "./skills/infisical-ci-integration",
+        "./skills/secret-hygiene"
       ]
     },
     {
@@ -557,9 +557,9 @@
         "./commands/clarify.md"
       ],
       "skills": [
-        "./skills/flow-detector/SKILL.md",
-        "./skills/flow-selector/SKILL.md",
-        "./skills/execution-context-builder/SKILL.md"
+        "./skills/flow-detector",
+        "./skills/flow-selector",
+        "./skills/execution-context-builder"
       ]
     },
     {
