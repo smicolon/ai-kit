@@ -495,6 +495,636 @@ import { formatDate } from '~/utils/date'
 - Auto-import awareness (no unnecessary imports)
 - Import organization
 
+### TanStack Router Plugin (11 Skills)
+
+#### 1. router-patterns
+**Auto-enforce TanStack Router file-based routing conventions**
+
+```tsx
+// ❌ Avoid untyped route definition
+export const Route = createFileRoute('/posts/$postId')({
+  component: PostComponent,
+})
+
+// ✅ Enforce type-safe loader and search params validation
+import { createFileRoute } from '@tanstack/react-router'
+import { z } from 'zod'
+
+const postSearchSchema = z.object({
+  tab: z.enum(['details', 'comments']).default('details'),
+})
+
+export const Route = createFileRoute('/posts/$postId')({
+  validateSearch: (search) => postSearchSchema.parse(search),
+  loader: ({ params: { postId } }) => fetchPost(postId),
+  component: PostComponent,
+})
+```
+
+**Activates when:**
+- Creating or editing file-based routes under `routes/`
+- Configuring route parameters, loaders, or layout routes
+- User mentions "TanStack Router", "routing", "file-based route"
+
+**Enforces:**
+- Type-safe route params with `$param` conventions
+- Search parameter validation with Zod schemas
+- Data loaders integrated with TanStack Query prefetching
+
+#### 2. query-patterns
+**Auto-enforce TanStack Query best practices with factory key pattern**
+
+```tsx
+// ❌ Inline ad-hoc query keys
+useQuery({ queryKey: ['users', id], queryFn: () => fetchUser(id) })
+
+// ✅ Query key factory pattern
+export const userKeys = {
+  all: ['users'] as const,
+  lists: () => [...userKeys.all, 'list'] as const,
+  detail: (id: string) => [...userKeys.all, 'detail', id] as const,
+}
+
+export const userQueries = {
+  detail: (id: string) =>
+    queryOptions({
+      queryKey: userKeys.detail(id),
+      queryFn: () => fetchUser(id),
+      staleTime: 5 * 60 * 1000,
+    }),
+}
+```
+
+**Activates when:**
+- Writing `useQuery`, `useMutation`, or cache invalidations
+- Configuring server state in React applications
+- User mentions "TanStack Query", "React Query", "caching"
+
+**Enforces:**
+- Centralized query key factories
+- `queryOptions` helper for reusable queries
+- Optimistic updates and structured mutation lifecycles
+
+#### 3. form-patterns
+**Auto-enforce TanStack Form best practices with Zod validation**
+
+```tsx
+// ✅ TanStack Form with Zod validator
+import { useForm } from '@tanstack/react-form'
+import { zodValidator } from '@tanstack/zod-form-adapter'
+import { z } from 'zod'
+
+const form = useForm({
+  validatorAdapter: zodValidator(),
+  defaultValues: { email: '' },
+  onSubmit: async ({ value }) => submitData(value),
+})
+
+<form.Field
+  name="email"
+  validators={{ onChange: z.string().email('Invalid email') }}
+>
+  {(field) => (
+    <input
+      value={field.state.value}
+      onBlur={field.handleBlur}
+      onChange={(e) => field.handleChange(e.target.value)}
+    />
+  )}
+</form.Field>
+```
+
+**Activates when:**
+- Building form components with `@tanstack/react-form`
+- Managing field subscriptions and form state
+- User mentions "TanStack Form", "form validation"
+
+**Enforces:**
+- Fine-grained reactivity without re-rendering the whole form
+- Zod schema validation adapters
+- Accessible field error states
+
+#### 4. table-patterns
+**Auto-enforce TanStack Table headless data table patterns**
+
+```tsx
+// ✅ Type-safe column definitions with TanStack Table
+import { createColumnHelper, useReactTable, getCoreRowModel } from '@tanstack/react-table'
+
+const columnHelper = createColumnHelper<User>()
+
+const columns = [
+  columnHelper.accessor('name', {
+    header: () => 'Full Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('email', {
+    header: () => 'Email Address',
+  }),
+]
+```
+
+**Activates when:**
+- Creating data tables, grids, or paginated lists
+- User mentions "TanStack Table", "data grid", "sorting", "pagination"
+
+**Enforces:**
+- Column helper pattern for type-safe accessor definitions
+- Headless architecture separated from UI presentation
+- Efficient sorting, filtering, and pagination models
+
+#### 5. virtual-patterns
+**Auto-enforce TanStack Virtual list and grid virtualization**
+
+```tsx
+// ✅ Virtualized list for large datasets
+import { useVirtualizer } from '@tanstack/react-virtual'
+
+const rowVirtualizer = useVirtualizer({
+  count: items.length,
+  getScrollElement: () => parentRef.current,
+  estimateSize: () => 48,
+})
+```
+
+**Activates when:**
+- Implementing infinite scroll, large lists, or massive tables
+- User mentions "TanStack Virtual", "virtualization", "infinite scroll"
+
+**Enforces:**
+- DOM node recycling for large collections
+- Dynamic measurement and responsive sizing
+- Smooth scroll performance
+
+#### 6. store-patterns
+**TanStack Store patterns for framework-agnostic reactive state**
+
+```typescript
+// ✅ Framework-agnostic reactive store
+import { Store } from '@tanstack/store'
+
+export const countStore = new Store({ count: 0 })
+
+export const increment = () => {
+  countStore.setState((state) => ({ ...state, count: state.count + 1 }))
+}
+```
+
+**Activates when:**
+- Creating client-side state stores with `@tanstack/store`
+- Managing global reactive state outside React component trees
+
+#### 7. db-patterns
+**TanStack DB patterns for client-side local-first data**
+
+```typescript
+// ✅ Client-first reactive collections
+import { createCollection } from '@tanstack/db'
+
+export const usersCollection = createCollection<User>({
+  name: 'users',
+  primaryKey: 'id',
+})
+```
+
+**Activates when:**
+- Implementing local-first caching, offline sync, or client collections
+- User mentions "TanStack DB", "offline-first", "client database"
+
+#### 8. ai-patterns
+**TanStack AI patterns for unified AI SDK integration**
+
+```typescript
+// ✅ Streaming AI integration
+import { useChat } from '@tanstack/ai-react'
+
+const { messages, input, handleInputChange, handleSubmit } = useChat({
+  api: '/api/chat',
+})
+```
+
+**Activates when:**
+- Implementing streaming AI chat, prompt handlers, or LLM UI features
+
+#### 9. pacer-patterns
+**TanStack Pacer patterns for rate limiting and debouncing**
+
+```typescript
+// ✅ Debouncing and throttling patterns
+import { Pacer } from '@tanstack/pacer'
+
+const debouncedSearch = new Pacer({
+  mode: 'debounce',
+  delayMs: 300,
+})
+```
+
+**Activates when:**
+- Adding search input debouncing, request throttling, or queue pacing
+
+#### 10. devtools-patterns
+**TanStack DevTools configuration for debugging**
+
+```tsx
+// ✅ Development-only DevTools mounting
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+
+{process.env.NODE_ENV === 'development' && (
+  <>
+    <ReactQueryDevtools position="bottom-right" />
+    <TanStackRouterDevtools position="bottom-left" />
+  </>
+)}
+```
+
+**Activates when:**
+- Configuring developer experience, debugging routes, or query inspection
+
+#### 11. tanstack-conventions
+**Auto-enforce cross-cutting project structure and imports across TanStack**
+
+```typescript
+// ✅ Clean barrel exports and path alias imports
+import { userQueries } from '@/features/users/queries'
+import { Route as UsersRoute } from '@/routes/users'
+```
+
+**Activates when:**
+- Organizing folders, imports, and feature boundaries in TanStack projects
+
+---
+
+### Hono Plugin (4 Skills)
+
+#### 1. hono-patterns
+**Routing, handlers, middleware composition, and app factory patterns**
+
+```typescript
+// ✅ Modular typed Hono sub-apps
+import { Hono } from 'hono'
+
+const app = new Hono()
+
+app.get('/health', (c) => {
+  return c.json({ status: 'ok', timestamp: Date.now() })
+})
+```
+
+**Activates when:**
+- Writing Hono routes, handlers, error handlers, or middleware
+- User mentions "Hono", "Edge API", "route handler"
+
+**Enforces:**
+- Proper context typing (`Context<Env>`)
+- Explicit HTTP status codes and typed JSON responses
+- Middleware chaining and error handling
+
+#### 2. cloudflare-bindings
+**Cloudflare Workers bindings typing for D1, KV, R2, and Secrets**
+
+```typescript
+// ✅ Strongly typed environment bindings
+type Bindings = {
+  DB: D1Database
+  CACHE: KVNamespace
+  STORAGE: R2Bucket
+  JWT_SECRET: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
+
+app.get('/items', async (c) => {
+  const { results } = await c.env.DB.prepare('SELECT * FROM items').all()
+  return c.json(results)
+})
+```
+
+**Activates when:**
+- Accessing `c.env` or working with Cloudflare Workers resources (D1, KV, R2, Queues)
+- User mentions "Cloudflare bindings", "D1", "KV", "Cloudflare Workers"
+
+**Enforces:**
+- Never using untyped `process.env` in Worker environments
+- Type-safe binding declarations in Hono generic type parameters
+
+#### 3. zod-validation
+**Request validation with @hono/zod-validator**
+
+```typescript
+// ✅ Validating request payloads with Zod
+import { zValidator } from '@hono/zod-validator'
+import { z } from 'zod'
+
+const createUserSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2),
+})
+
+app.post('/users', zValidator('json', createUserSchema), async (c) => {
+  const data = c.req.valid('json')
+  return c.json({ created: data.email }, 201)
+})
+```
+
+**Activates when:**
+- Validating JSON bodies, search queries, URL parameters, or headers in Hono
+- User mentions "validation", "zValidator", "schema"
+
+**Enforces:**
+- Using `c.req.valid()` instead of unchecked input
+- Returning standardized 400 Bad Request responses on validation errors
+
+#### 4. rpc-typesafe
+**End-to-end type safety with Hono RPC client (hc)**
+
+```typescript
+// Server: export type AppType = typeof routes
+// Client:
+import { hc } from 'hono/client'
+import type { AppType } from './server'
+
+const client = hc<AppType>('https://api.example.com')
+const res = await client.users.$get()
+const data = await res.json() // Fully typed response!
+```
+
+**Activates when:**
+- Sharing types between backend API and frontend clients
+- User mentions "Hono RPC", "hc client", "type-safe API"
+
+---
+
+### Flutter Plugin (3 Skills)
+
+#### 1. flutter-architecture
+**Feature-first clean architecture and state management patterns**
+
+```dart
+// ✅ Layered feature structure:
+// lib/src/features/auth/
+//   ├── data/ (repositories, data sources)
+//   ├── domain/ (entities, value objects)
+//   └── presentation/ (controllers/cubits, screens, widgets)
+```
+
+**Activates when:**
+- Structuring Flutter projects, widgets, state management (Bloc, Riverpod, Provider)
+- User mentions "Flutter", "architecture", "state management", "widget"
+
+**Enforces:**
+- Separation of business logic from UI widgets
+- Immutability for domain entities and state objects
+- Dependency injection conventions
+
+#### 2. fastlane-knowledge
+**Fastlane automation for iOS and Android deployment lanes**
+
+```ruby
+# ✅ Standard Fastlane configuration for mobile builds
+lane :beta do
+  match(type: "appstore")
+  build_app(scheme: "Runner")
+  upload_to_testflight
+end
+```
+
+**Activates when:**
+- Configuring `fastlane/Fastfile`, `Appfile`, code signing, or mobile CI/CD pipelines
+- User mentions "Fastlane", "TestFlight", "Google Play track", "match"
+
+#### 3. store-publishing
+**App Store and Google Play review guidelines and metadata specifications**
+
+```markdown
+# ✅ Store Compliance Checklist:
+- Privacy manifest and permission justifications in Info.plist / AndroidManifest.xml
+- Screenshot dimensions matching all required device form factors
+- In-App Purchase compliance and account deletion flows
+```
+
+**Activates when:**
+- Preparing store submissions, drafting metadata, or resolving app review rejections
+- User mentions "App Store", "Google Play", "store publishing", "review guidelines"
+
+---
+
+### Better Auth Plugin (2 Skills)
+
+#### 1. better-auth-patterns
+**Better Auth integration, provider setup, and session management**
+
+```typescript
+// ✅ Better Auth server setup with typed plugins
+import { betterAuth } from 'better-auth'
+import { twoFactor, passkey } from 'better-auth/plugins'
+
+export const auth = betterAuth({
+  database: db,
+  emailAndPassword: { enabled: true },
+  socialProviders: { github: { clientId: '...', clientSecret: '...' } },
+  plugins: [twoFactor(), passkey()],
+})
+```
+
+**Activates when:**
+- Setting up Better Auth server config, OAuth providers, client hooks, or auth middleware
+- User mentions "Better Auth", "authentication", "session", "passkey"
+
+#### 2. auth-security
+**Authentication security best practices, rate limiting, and session protection**
+
+```typescript
+// ✅ Enforce rate limiting, strong password policy, and secure session cookies
+export const auth = betterAuth({
+  rateLimit: { window: 60, max: 10 },
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === 'production',
+  },
+})
+```
+
+**Activates when:**
+- Writing authentication flows, handling tokens, configuring cookies, or setting up 2FA
+- Enforces OWASP authentication guidelines, brute-force protection, and CSRF safety
+
+---
+
+### Infisical Plugin (3 Skills)
+
+#### 1. infisical-patterns
+**Secret naming, folder organization, and CLI development workflows**
+
+```bash
+# ✅ Organize secrets by consumer, inject directly at runtime
+infisical run --env=dev --path=/backend -- npm run dev
+```
+
+**Activates when:**
+- Configuring `.infisical.json`, organizing environments, or secret naming conventions
+- User mentions "Infisical", "secrets", "env vars", "secret management"
+
+**Enforces:**
+- By-consumer folder structure (`/backend`, `/frontend`, `/ci`)
+- Semantic UPPER_SNAKE_CASE naming for secrets
+- Eliminating long-lived local plaintext secrets
+
+#### 2. infisical-ci-integration
+**Secret injection in GitHub Actions, GitLab CI, Docker, and Kubernetes**
+
+```yaml
+# ✅ Safe secret injection in CI without repository secrets sprawl
+- name: Install Infisical CLI
+  uses: Infisical/infisical-action@v1
+  with:
+    client-id: ${{ secrets.INFISICAL_CLIENT_ID }}
+    client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+    project-id: ${{ secrets.INFISICAL_PROJECT_ID }}
+    env: staging
+```
+
+**Activates when:**
+- Writing CI/CD pipeline definitions, Dockerfiles, or container manifests that need credentials
+- User mentions "CI/CD secrets", "GitHub Actions secret injection", "Infisical CI"
+
+#### 3. secret-hygiene
+**Detecting hardcoded secrets, preventing credential leaks, and .env auditing**
+
+```typescript
+// ❌ Hardcoded API key detected
+const apiKey = "sk_test_placeholder_key"
+
+// ✅ Replaced with Infisical secret reference
+const apiKey = process.env.STRIPE_SECRET_KEY
+```
+
+**Activates when:**
+- Code contains hardcoded API keys, JWT tokens, DB credentials, or unencrypted `.env` commits
+- Proactively blocks credential exposure and suggests migration to Infisical
+
+---
+
+### Clarify Plugin (3 Skills)
+
+#### 1. flow-detector
+**Task grounding and candidate flow detection before implementation**
+
+```markdown
+# Flow Detector Output:
+Task: "Send message on sign-in"
+Candidate 1: In-app notification to signing-in user (Trigger: Auth post-login event -> Channel: InAppNotification -> Recipient: User)
+Candidate 2: Email audit alert to tenant admins (Trigger: Auth post-login event -> Channel: EmailService -> Recipient: Tenant Admin)
+```
+
+**Activates when:**
+- Developer provides a vague task prompt with unspecified triggers, entities, or recipients
+- Scans existing repo infrastructure to anchor candidate flows in real code
+
+#### 2. flow-selector
+**Disambiguates candidate flows with exactly one multi-choice question**
+
+```
+This task has multiple possible flows:
+1. User sign-in flow — in-app message to signing-in user
+2. Tenant audit flow — email alert to tenant owner
+Which flow would you like to proceed with?
+```
+
+**Activates when:**
+- `flow-detector` yields 2+ plausible flows
+- Prompts user once using `AskUserQuestion`; never asks repetitive cluster-by-cluster questions
+
+#### 3. execution-context-builder
+**Generates canonical execution context artifacts (.local.md and .local.json)**
+
+```
+✓ Execution context written:
+  .claude/clarifications/send-message-on-sign-in.local.md
+  .claude/clarifications/send-message-on-sign-in.local.json
+```
+
+**Activates when:**
+- Single flow is identified or user selects a flow
+- Writes machine-readable and human-readable contracts for downstream agents and dev loops
+
+---
+
+### Dev-Loop Plugin (1 Skill)
+
+#### 1. tdd-planner
+**Generates structured TDD feature plans for autonomous dev loops**
+
+```markdown
+# TDD Plan
+## Phase 1: Red (Failing tests)
+- `tests/test_auth.py::test_login_flow` -> Expected failure: UserService not found
+## Phase 2: Green (Minimal implementation)
+- Implement `UserService.authenticate`
+## Phase 3: Refactor
+- Extract token validator, clean imports
+```
+
+**Activates when:**
+- User runs `/dev-plan` or asks to plan a feature with TDD
+- Provides file breakdown tables, test specifications, and acceptance criteria
+
+---
+
+### Failure-Log Plugin (1 Skill)
+
+#### 1. failure-log-manager
+**Persistent mistake memory and regression prevention across sessions**
+
+```markdown
+<!-- .claude/failure-log.local.md -->
+### Pattern: Circular Imports in Django
+- Cause: Importing models relatively inside serializers
+- Solution: Always use absolute modular imports with aliases (`import app.models as _app_models`)
+```
+
+**Activates when:**
+- User logs a mistake via `/failure-add` or when errors are detected during editing
+- Automatically injects known project pitfalls into Claude's context to prevent repeated errors
+
+---
+
+### Onboard Plugin (1 Skill)
+
+#### 1. onboard-context-provider
+**Adaptive, personalized explanations matched to an engineer's background**
+
+```markdown
+# Conceptual Bridge:
+Engineer knows: Django ORM & class-based views
+Project uses: NestJS TypeORM & Controllers
+Explanation: "TypeORM repositories operate like Django Managers; controllers route requests like CBVs."
+```
+
+**Activates when:**
+- Engineer asks architectural questions ("how do I", "where does this go", "what is the pattern")
+- Reads `.claude/onboard-profile.local.md` to tailor depth, syntax, and terminology
+
+---
+
+### Worktree Plugin (1 Skill)
+
+#### 1. worktree-manager
+**Automates parallel git worktrees with environment copying and container isolation**
+
+```bash
+/wt create feature/payments
+# → Sibling worktree: project--feature-payments/
+# → Copies files per .worktreeinclude
+# → Rewrites DB_NAME to project_feature_payments
+# → Applies deterministic Docker compose port offsets
+```
+
+**Activates when:**
+- Managing worktrees, parallel branch workflows, or solving Docker port / database collision issues
+- Enforces `.worktreeinclude` conventions and clean workspace teardown
+
+---
+
 ## Developer Experience
 
 ### Before Skills
@@ -790,13 +1420,23 @@ Add to `.claude-plugin/marketplace.json`:
 Skills provide **automatic convention enforcement** across the Smicolon marketplace:
 
 | Plugin | Skills | Focus |
-|--------|--------|-------|
-| Django | 8 | Security, performance, testing, TDD, patterns |
-| Next.js | 3 | Accessibility, forms, imports |
-| Nuxt.js | 3 | Accessibility, forms, imports |
-| NestJS | 2 | Barrel exports, import patterns |
+|--------|:------:|-------|
+| django | 8 | Security, performance, testing, TDD, patterns |
+| tanstack-router | 11 | Routing, caching, forms, tables, virtualization, store, DB |
+| hono | 4 | Routing, Cloudflare bindings, Zod validation, RPC |
+| nextjs | 3 | Accessibility, forms, path alias imports |
+| nuxtjs | 3 | Accessibility, forms, Nuxt imports |
+| flutter | 3 | Clean architecture, Fastlane, store publishing |
+| infisical | 3 | Secret naming, CI/CD injection, secret hygiene |
+| clarify | 3 | Flow detection, disambiguation, execution context |
+| nestjs | 2 | Barrel exports, absolute imports |
+| better-auth | 2 | Authentication setup, security best practices |
+| dev-loop | 1 | Structured TDD planning for iterative loops |
+| failure-log | 1 | Persistent mistake memory and prevention |
+| worktree | 1 | Git worktree management, env and port isolation |
+| onboard | 1 | Personalized engineer onboarding guidance |
 
-**Total**: 16 auto-enforcing skills that prevent mistakes before they reach code review.
+**Total**: 46 auto-enforcing skills that prevent mistakes before they reach code review.
 
 **Benefits**:
 - 80-100% reduction in convention violations

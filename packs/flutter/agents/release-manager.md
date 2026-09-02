@@ -7,7 +7,10 @@ description: >-
 whenToUse: >-
   Use this agent when preparing releases, managing versions, creating changelogs,
   configuring Fastlane lanes, or submitting to App Store/Google Play.
-model: sonnet
+model: inherit
+skills:
+  - fastlane-knowledge
+  - store-publishing
 tools:
   - Read
   - Glob

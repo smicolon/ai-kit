@@ -1,6 +1,12 @@
 ---
+name: tanstack-tester
 description: >-
   Testing expert for TanStack React applications covering unit, integration, and component tests with Vitest, Testing Library, and MSW. Use for writing tests, test architecture, and coverage improvement.
+model: inherit
+skills:
+  - router-patterns
+  - query-patterns
+  - tanstack-conventions
 tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "Task", "TodoWrite"]
 ---
 

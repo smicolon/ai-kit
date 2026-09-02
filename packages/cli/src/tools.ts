@@ -106,10 +106,10 @@ export const TOOL_REGISTRY: Record<ToolId, ToolConfig> = {
   antigravity: {
     label: 'Antigravity',
     hint: 'skills, rules',
-    skillsDir: '.antigravity/skills',
+    skillsDir: '.agents/skills',
     components: {
-      skills: '.antigravity/skills',
-      rules: '.antigravity/rules',
+      skills: '.agents/skills',
+      rules: '.agents/rules',
     },
   },
   augment: {

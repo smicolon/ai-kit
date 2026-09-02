@@ -9,7 +9,9 @@ import { updateGitignore } from '../gitignore.js'
 import { installPack } from '../installer.js'
 import { getGlobalTools, saveGlobalTools } from '../global-config.js'
 import { getRegistryOptions } from '../global-opts.js'
+import { detectProject } from '../detect.js'
 import type { ToolId, ComponentType } from '../types.js'
+
 
 export const initCommand = new Command('init')
   .description('Interactive first-time setup')
@@ -102,8 +104,23 @@ export const initCommand = new Command('init')
       }
     }
 
-    // Step 1: Select AI coding tools (pre-select from global config)
+    // Scan workspace
+    const detected = detectProject(projectDir)
+    if (detected.tools.length > 0) {
+      p.log.info(`Detected workspace AI tools: ${detected.tools.map(t => TOOL_REGISTRY[t].label).join(', ')}`)
+    }
+    if (detected.packs.length > 0) {
+      const details = detected.packs
+        .map(pk => `${pk} (${detected.reasons[pk]})`)
+        .join(', ')
+      p.log.info(`Detected project stack: ${details}`)
+    }
+
+    // Step 1: Select AI coding tools (pre-select from global config or detection)
     const savedTools = getGlobalTools()
+    const initialTools = savedTools && savedTools.length > 0
+      ? savedTools
+      : (detected.tools.length > 0 ? detected.tools : [])
 
     const toolSelection = await p.autocompleteMultiselect({
       message: 'Which AI coding tools do you use? (type to filter)',
@@ -112,7 +129,7 @@ export const initCommand = new Command('init')
         label: TOOL_REGISTRY[id].label,
         hint: TOOL_REGISTRY[id].hint,
       })),
-      initialValues: savedTools ?? [],
+      initialValues: initialTools,
       required: true,
     })
 
@@ -140,6 +157,7 @@ export const initCommand = new Command('init')
       return
     }
 
+    const defaultPacks = detected.packs.filter(dp => packs.some(pk => pk.name === dp))
     const packSelection = await p.autocompleteMultiselect({
       message: 'Which packs do you want to install? (type to filter)',
       options: packs.map(pack => ({
@@ -147,6 +165,7 @@ export const initCommand = new Command('init')
         label: pack.name,
         hint: pack.description,
       })),
+      initialValues: defaultPacks.length > 0 ? defaultPacks : undefined,
       required: true,
     })
 
@@ -209,8 +228,9 @@ export const initCommand = new Command('init')
         projectDir,
       })
 
-      config = mergeInstall(config, result)
+      config = mergeInstall(config, result, pack.version)
     }
+
 
     // Step 5: Write config + gitignore
     writeConfig(projectDir, config)

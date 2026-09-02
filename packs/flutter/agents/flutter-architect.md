@@ -7,7 +7,11 @@ description: >-
 whenToUse: >-
   Use this agent when the user is planning a new Flutter app, designing feature architecture,
   choosing state management solutions, or making architectural decisions about app structure.
-model: sonnet
+model: inherit
+skills:
+  - flutter-architecture
+  - fastlane-knowledge
+  - store-publishing
 tools:
   - Read
   - Glob

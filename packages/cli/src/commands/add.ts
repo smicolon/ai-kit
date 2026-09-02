@@ -104,9 +104,9 @@ export const addCommand = new Command('add')
     let config = readConfig(projectDir) ?? createDefaultConfig(tools)
     config.tools = tools
 
-    const updated = mergeInstall(config, result)
-    updated.packs[pack.name].version = pack.version
+    const updated = mergeInstall(config, result, pack.version)
     writeConfig(projectDir, updated)
+
     updateGitignore(projectDir)
 
     // Summary

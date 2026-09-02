@@ -43,6 +43,29 @@ function resolvePack(
   // Skills entries point at the skill directory (containing SKILL.md).
   const skills = (plugin.skills ?? []).map(s => path.resolve(sourceDir, s))
 
+  // Discover hooks from filesystem or marketplace.json
+  let hooks: string[] = []
+  const hooksFile = path.join(sourceDir, 'hooks', 'hooks.json')
+  if (fs.existsSync(hooksFile)) {
+    hooks.push(hooksFile)
+  }
+  if (plugin.hooks) {
+    for (const h of plugin.hooks) {
+      const resolved = path.resolve(sourceDir, h)
+      if (!hooks.includes(resolved)) {
+        hooks.push(resolved)
+      }
+    }
+  }
+
+  // MCP servers from plugin config or .mcp.json in pack
+  let mcpServers = plugin.mcpServers
+    ? path.resolve(sourceDir, plugin.mcpServers)
+    : undefined
+  if (!mcpServers && fs.existsSync(path.join(sourceDir, '.mcp.json'))) {
+    mcpServers = path.join(sourceDir, '.mcp.json')
+  }
+
   return {
     name: plugin.name,
     version: plugin.version,
@@ -54,10 +77,8 @@ function resolvePack(
     commands: resolveFiles(plugin.commands),
     skills,
     rules,
-    hooks: resolveFiles(plugin.hooks),
-    mcpServers: plugin.mcpServers
-      ? path.resolve(sourceDir, plugin.mcpServers)
-      : undefined,
+    hooks,
+    mcpServers,
   }
 }
 

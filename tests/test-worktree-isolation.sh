@@ -213,38 +213,34 @@ fi
 echo ""
 echo "--- Layer 3: Docker Compose Isolation ---"
 
-# Check docker-compose.worktree.yml was generated
-if [[ -f "$WT_PATH/docker-compose.worktree.yml" ]]; then
-    pass "docker-compose.worktree.yml generated"
+# Check local.yml was patched in-place with env var interpolation
+if grep -q '\${WT_PORT_POSTGRES_5432:-5432}:5432' "$WT_PATH/local.yml"; then
+    pass "local.yml patched in-place (Postgres port interpolation)"
 else
-    fail "docker-compose.worktree.yml NOT generated"
+    actual=$(grep -i "5432" "$WT_PATH/local.yml" || echo "(not found)")
+    fail "local.yml Postgres port not patched. Got: $actual"
 fi
 
-# Check COMPOSE_FILE is set in .env
-if grep -q "^COMPOSE_FILE=local.yml:docker-compose.worktree.yml" "$WT_PATH/.env"; then
-    pass "COMPOSE_FILE set in .env"
+if grep -q '\${WT_PORT_REDIS_6379:-6379}:6379' "$WT_PATH/local.yml"; then
+    pass "local.yml patched in-place (Redis port interpolation)"
 else
-    actual=$(grep "^COMPOSE_FILE=" "$WT_PATH/.env" || echo "(not found)")
-    fail "COMPOSE_FILE not set correctly. Got: $actual"
+    actual=$(grep -i "6379" "$WT_PATH/local.yml" || echo "(not found)")
+    fail "local.yml Redis port not patched. Got: $actual"
 fi
 
-# Check port offsets are applied (ports should differ from originals)
-if [[ -f "$WT_PATH/docker-compose.worktree.yml" ]]; then
-    # Original port 5432 should be offset
-    if grep -q '"54[0-9][0-9]:5432"' "$WT_PATH/docker-compose.worktree.yml"; then
-        pass "Postgres port offset applied"
-    else
-        actual=$(grep "5432" "$WT_PATH/docker-compose.worktree.yml" || echo "(no postgres port found)")
-        fail "Postgres port not offset. Content: $actual"
-    fi
+# Check port env vars written to .env with offsets applied
+if grep -q '^WT_PORT_POSTGRES_5432=54[0-9][0-9]' "$WT_PATH/.env"; then
+    pass "Postgres port offset applied in .env"
+else
+    actual=$(grep "^WT_PORT_POSTGRES_5432=" "$WT_PATH/.env" || echo "(not found)")
+    fail "Postgres port offset not set in .env. Got: $actual"
+fi
 
-    # Original port 6379 should be offset
-    if grep -q '"6[0-9][0-9][0-9]:6379"' "$WT_PATH/docker-compose.worktree.yml"; then
-        pass "Redis port offset applied"
-    else
-        actual=$(grep "6379" "$WT_PATH/docker-compose.worktree.yml" || echo "(no redis port found)")
-        fail "Redis port not offset. Content: $actual"
-    fi
+if grep -q '^WT_PORT_REDIS_6379=6[0-9][0-9][0-9]' "$WT_PATH/.env"; then
+    pass "Redis port offset applied in .env"
+else
+    actual=$(grep "^WT_PORT_REDIS_6379=" "$WT_PATH/.env" || echo "(not found)")
+    fail "Redis port offset not set in .env. Got: $actual"
 fi
 
 # =============================================================================
