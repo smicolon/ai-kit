@@ -10,14 +10,16 @@ import { installPack } from '../installer.js'
 import { getGlobalTools, saveGlobalTools } from '../global-config.js'
 import { getRegistryOptions } from '../global-opts.js'
 import { detectProject } from '../detect.js'
+import { getCliVersion } from '../version.js'
 import type { ToolId, ComponentType } from '../types.js'
-
 
 export const initCommand = new Command('init')
   .description('Interactive first-time setup')
+  .option('--tools <tools>', 'Comma-separated tool IDs (e.g. cursor,claude-code)')
+  .option('-y, --yes', 'Non-interactive mode using detected defaults')
   .option('--cwd <dir>', 'Project directory (for monorepo sub-packages)')
-  .action(async (opts: { cwd?: string }) => {
-    p.intro(pc.bgCyan(pc.black(' ai-kit ')))
+  .action(async (opts: { tools?: string; yes?: boolean; cwd?: string }) => {
+    p.intro(`${pc.bgCyan(pc.black(' ai-kit '))} ${pc.dim(`v${getCliVersion()}`)} ${pc.cyan('— AI Coding Tool Conventions')}`)
 
     const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
     const existing = readConfig(projectDir)
@@ -116,32 +118,40 @@ export const initCommand = new Command('init')
       p.log.info(`Detected project stack: ${details}`)
     }
 
-    // Step 1: Select AI coding tools (pre-select from global config or detection)
+    // Step 1: Select AI coding tools
     const savedTools = getGlobalTools()
     const initialTools = savedTools && savedTools.length > 0
       ? savedTools
       : (detected.tools.length > 0 ? detected.tools : [])
 
-    const toolSelection = await p.autocompleteMultiselect({
-      message: 'Which AI coding tools do you use? (type to filter)',
-      options: TOOL_IDS.map(id => ({
-        value: id,
-        label: TOOL_REGISTRY[id].label,
-        hint: TOOL_REGISTRY[id].hint,
-      })),
-      initialValues: initialTools,
-      required: true,
-    })
+    let selectedTools: ToolId[]
+    if (opts.tools) {
+      selectedTools = opts.tools.split(',').map(t => t.trim()) as ToolId[]
+      saveGlobalTools(selectedTools)
+      p.log.info(`Using tools: ${selectedTools.map(t => TOOL_REGISTRY[t]?.label ?? t).join(', ')}`)
+    } else if (opts.yes) {
+      selectedTools = initialTools.length > 0 ? initialTools : ['claude-code']
+      saveGlobalTools(selectedTools)
+      p.log.info(`Using tools: ${selectedTools.map(t => TOOL_REGISTRY[t]?.label ?? t).join(', ')}`)
+    } else {
+      const toolSelection = await p.autocompleteMultiselect({
+        message: 'Which AI coding tools do you use? (type to filter)',
+        options: TOOL_IDS.map(id => ({
+          value: id,
+          label: TOOL_REGISTRY[id].label,
+          hint: TOOL_REGISTRY[id].hint,
+        })),
+        initialValues: initialTools,
+        required: true,
+      })
 
-    if (p.isCancel(toolSelection)) {
-      p.outro('Cancelled.')
-      return
+      if (p.isCancel(toolSelection)) {
+        p.outro('Cancelled.')
+        return
+      }
+      selectedTools = toolSelection as ToolId[]
+      saveGlobalTools(selectedTools)
     }
-
-    const selectedTools = toolSelection as ToolId[]
-
-    // Save tools globally for future use
-    saveGlobalTools(selectedTools)
 
     // Step 2: Discover and select packs
     const s = p.spinner()
@@ -158,60 +168,68 @@ export const initCommand = new Command('init')
     }
 
     const defaultPacks = detected.packs.filter(dp => packs.some(pk => pk.name === dp))
-    const packSelection = await p.autocompleteMultiselect({
-      message: 'Which packs do you want to install? (type to filter)',
-      options: packs.map(pack => ({
-        value: pack.name,
-        label: pack.name,
-        hint: pack.description,
-      })),
-      initialValues: defaultPacks.length > 0 ? defaultPacks : undefined,
-      required: true,
-    })
+    let selectedPackNames: string[]
 
-    if (p.isCancel(packSelection)) {
-      p.outro('Cancelled.')
-      return
-    }
-
-    const selectedPackNames = packSelection as string[]
-
-    // Step 3: Component filter
-    const componentChoice = await p.select({
-      message: 'What components should be installed?',
-      options: [
-        { value: 'all', label: 'Everything', hint: 'agents, skills, commands, rules, hooks' },
-        { value: 'skills', label: 'Skills only', hint: 'auto-enforcing convention skills' },
-        { value: 'pick', label: 'Let me pick' },
-      ],
-    })
-
-    if (p.isCancel(componentChoice)) {
-      p.outro('Cancelled.')
-      return
-    }
-
-    let filter: ComponentType[] | undefined
-    if (componentChoice === 'skills') {
-      filter = ['skills']
-    } else if (componentChoice === 'pick') {
-      const components = await p.multiselect({
-        message: 'Select component types:',
-        options: [
-          { value: 'agents', label: 'Agents', hint: 'specialized AI agents' },
-          { value: 'skills', label: 'Skills', hint: 'auto-enforcing conventions' },
-          { value: 'commands', label: 'Commands', hint: 'slash commands' },
-          { value: 'rules', label: 'Rules', hint: 'path-specific rules' },
-          { value: 'hooks', label: 'Hooks', hint: 'lifecycle hooks (Claude Code only)' },
-        ],
+    if (opts.yes) {
+      selectedPackNames = defaultPacks.length > 0 ? defaultPacks : ['dev-loop']
+      p.log.info(`Selected packs: ${selectedPackNames.join(', ')}`)
+    } else {
+      const packSelection = await p.autocompleteMultiselect({
+        message: 'Which packs do you want to install? (type to filter)',
+        options: packs.map(pack => ({
+          value: pack.name,
+          label: pack.name,
+          hint: pack.description,
+        })),
+        initialValues: defaultPacks.length > 0 ? defaultPacks : undefined,
         required: true,
       })
 
-      if (p.isCancel(components)) {
+      if (p.isCancel(packSelection)) {
         p.outro('Cancelled.')
         return
       }
-      filter = components as ComponentType[]
+      selectedPackNames = packSelection as string[]
+    }
+
+    // Step 3: Component filter
+    let filter: ComponentType[] | undefined
+    if (!opts.yes) {
+      const componentChoice = await p.select({
+        message: 'What components should be installed?',
+        options: [
+          { value: 'all', label: 'Everything', hint: 'agents, skills, commands, rules, hooks' },
+          { value: 'skills', label: 'Skills only', hint: 'auto-enforcing convention skills' },
+          { value: 'pick', label: 'Let me pick' },
+        ],
+      })
+
+      if (p.isCancel(componentChoice)) {
+        p.outro('Cancelled.')
+        return
+      }
+
+      if (componentChoice === 'skills') {
+        filter = ['skills']
+      } else if (componentChoice === 'pick') {
+        const components = await p.multiselect({
+          message: 'Select component types:',
+          options: [
+            { value: 'agents', label: 'Agents', hint: 'specialized AI agents' },
+            { value: 'skills', label: 'Skills', hint: 'auto-enforcing conventions' },
+            { value: 'commands', label: 'Commands', hint: 'slash commands' },
+            { value: 'rules', label: 'Rules', hint: 'path-specific rules' },
+            { value: 'hooks', label: 'Hooks', hint: 'lifecycle hooks (Claude Code only)' },
+          ],
+          required: true,
+        })
+
+        if (p.isCancel(components)) {
+          p.outro('Cancelled.')
+          return
+        }
+        filter = components as ComponentType[]
+      }
     }
 
     // Step 4: Install

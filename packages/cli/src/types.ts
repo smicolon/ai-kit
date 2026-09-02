@@ -65,6 +65,8 @@ export interface ResolvedPack {
   mcpServers?: string
 }
 
+export type Pack = ResolvedPack
+
 export interface AiKitConfig {
   version: string
   tools: ToolId[]

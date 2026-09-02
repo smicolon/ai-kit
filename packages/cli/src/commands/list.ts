@@ -42,10 +42,21 @@ export const listCommand = new Command('list')
     const config = readConfig(projectDir)
     const installedNames = config ? Object.keys(config.packs) : []
 
-    console.log(pc.bold('Available packs:\n'))
-    for (const pack of packs) {
+    const CATEGORIES: Record<string, string[]> = {
+      'Frameworks & Stacks': ['django', 'nestjs', 'nextjs', 'nuxtjs', 'hono', 'tanstack-router', 'better-auth', 'flutter'],
+      'Workflow & Automation': ['dev-loop', 'worktree', 'clarify', 'react-review', 'onboard', 'failure-log'],
+      'Architecture & Infrastructure': ['architect', 'infisical'],
+    }
+
+    console.log(pc.bold(`\nai-kit Packs (${packs.length} available)\n`))
+
+    const renderPack = (pack: typeof packs[number]) => {
       const installed = installedNames.includes(pack.name)
+      const bullet = installed ? pc.green('●') : pc.dim('○')
+      const name = installed ? pc.bold(pc.green(pack.name)) : pc.bold(pc.cyan(pack.name))
       const badge = installed ? pc.green(' [installed]') : ''
+      const version = pc.dim(`v${pack.version}`)
+
       const counts: string[] = []
       if (pack.agents.length) counts.push(`${pack.agents.length} agents`)
       if (pack.skills.length) counts.push(`${pack.skills.length} skills`)
@@ -53,12 +64,34 @@ export const listCommand = new Command('list')
       if (pack.rules.length) counts.push(`${pack.rules.length} rules`)
       if (pack.hooks.length) counts.push(`${pack.hooks.length} hooks`)
 
-      console.log(
-        `  ${pc.cyan(pack.name)}${badge} ${pc.dim(`v${pack.version}`)}\n` +
-        `    ${pack.description}\n` +
-        `    ${pc.dim(counts.join(', '))}`,
-      )
+      const meta = pc.dim(counts.join(' · '))
+
+      console.log(`  ${bullet} ${name}${badge} ${version}  ${meta}`)
+      console.log(`    ${pc.dim(pack.description)}`)
     }
 
-    console.log(`\n${pc.dim(`${packs.length} packs available`)}`)
+    const rendered = new Set<string>()
+
+    for (const [category, names] of Object.entries(CATEGORIES)) {
+      const categoryPacks = packs.filter(p => names.includes(p.name))
+      if (categoryPacks.length === 0) continue
+
+      console.log(pc.bold(pc.yellow(`  ${category}`)))
+      for (const pack of categoryPacks) {
+        renderPack(pack)
+        rendered.add(pack.name)
+      }
+      console.log('')
+    }
+
+    const otherPacks = packs.filter(p => !rendered.has(p.name))
+    if (otherPacks.length > 0) {
+      console.log(pc.bold(pc.yellow('  Other Packs')))
+      for (const pack of otherPacks) {
+        renderPack(pack)
+      }
+      console.log('')
+    }
+
+    console.log(pc.dim(`Use ${pc.cyan('ai-kit add <pack>')} to install, or ${pc.cyan('ai-kit init')} for interactive setup.`))
   })
