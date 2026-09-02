@@ -1,6 +1,6 @@
 # NestJS Development Standards Plugin
 
-Smicolon company standards for NestJS/TypeScript backend projects.
+Production standards and convention pack for NestJS/TypeScript backend projects.
 
 ## Installation
 

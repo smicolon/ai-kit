@@ -5,7 +5,7 @@ description: This skill should be used when the user asks to "write tests", "gen
 
 # Test Coverage Advisor
 
-Auto-suggests comprehensive test cases to achieve Smicolon's 90%+ coverage target.
+Auto-suggests comprehensive test cases to achieve the 90%+ test coverage target.
 
 ## Activation Triggers
 

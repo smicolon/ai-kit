@@ -48,6 +48,17 @@ PLUGIN_DIRS=(
     "$HOME/.claude/plugins/nextjs"
     "$HOME/.claude/plugins/nuxtjs"
     "$HOME/.claude/plugins/architect"
+    "$HOME/.claude/plugins/dev-loop"
+    "$HOME/.claude/plugins/failure-log"
+    "$HOME/.claude/plugins/flutter"
+    "$HOME/.claude/plugins/hono"
+    "$HOME/.claude/plugins/tanstack-router"
+    "$HOME/.claude/plugins/better-auth"
+    "$HOME/.claude/plugins/worktree"
+    "$HOME/.claude/plugins/onboard"
+    "$HOME/.claude/plugins/infisical"
+    "$HOME/.claude/plugins/clarify"
+    "$HOME/.claude/plugins/react-review"
 )
 
 for dir in "${PLUGIN_DIRS[@]}"; do

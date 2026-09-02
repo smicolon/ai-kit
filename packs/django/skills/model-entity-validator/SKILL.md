@@ -5,7 +5,7 @@ description: This skill should be used when the user asks to "create a model", "
 
 # Model/Entity Validator
 
-Enforces Smicolon's BaseModel inheritance pattern for all Django models.
+Enforces the BaseModel inheritance pattern (UUID primary keys, audit timestamps, soft deletes) for all Django models.
 
 ## Activation Triggers
 

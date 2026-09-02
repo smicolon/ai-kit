@@ -18,7 +18,11 @@ export function writeConfig(projectDir: string, config: AiKitConfig): void {
   fs.writeFileSync(configPath(projectDir), JSON.stringify(config, null, 2) + '\n')
 }
 
-export function mergeInstall(config: AiKitConfig, result: InstallResult): AiKitConfig {
+export function mergeInstall(
+  config: AiKitConfig,
+  result: InstallResult,
+  version?: string,
+): AiKitConfig {
   const components: Record<string, string[]> = {}
 
   for (const [type, count] of Object.entries(result.installed)) {
@@ -27,12 +31,15 @@ export function mergeInstall(config: AiKitConfig, result: InstallResult): AiKitC
     }
   }
 
+  const existingPack = config.packs[result.pack]
+  const resolvedVersion = version ?? existingPack?.version ?? '0.0.0'
+
   return {
     ...config,
     packs: {
       ...config.packs,
       [result.pack]: {
-        version: config.packs[result.pack]?.version ?? '0.0.0',
+        version: resolvedVersion,
         installedAt: new Date().toISOString(),
         components,
         files: result.files,
@@ -40,6 +47,7 @@ export function mergeInstall(config: AiKitConfig, result: InstallResult): AiKitC
     },
   }
 }
+
 
 export function removePack(config: AiKitConfig, packName: string): AiKitConfig {
   const { [packName]: _, ...rest } = config.packs

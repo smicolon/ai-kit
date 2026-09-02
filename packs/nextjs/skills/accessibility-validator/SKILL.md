@@ -392,20 +392,35 @@ test('LoginButton has no accessibility violations', async () => {
 - Color-only information
 - Missing text alternatives
 
-## Integration with Tailwind
+## Integration with Tailwind CSS (Tailwind v4 CSS-First)
+
+Tailwind CSS v4 uses a CSS-first architecture with `@import "tailwindcss";` and `@theme` in CSS. No `tailwind.config.js` is required. Accessible design tokens (contrast colors, focus rings) should be defined directly in CSS `@theme`:
+
+```css
+/* app/globals.css */
+@import "tailwindcss";
+
+@theme {
+  --color-focus-ring: #2563eb;
+  --color-text-high-contrast: #111827;
+  --color-text-muted: #4b5563;
+}
+```
+
+Accessible utility usage in components:
 
 ```tsx
 // Utility class for screen reader only text
 <span className="sr-only">Accessible description</span>
 
-// Focus ring utilities
-<button className="focus:outline-none focus:ring-2 focus:ring-blue-500">
+// Focus ring utilities (visible focus indicator)
+<button className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
   Click me
 </button>
 
-// High contrast text
-<p className="text-gray-900 dark:text-gray-100">
-  Good contrast in both modes
+// High contrast text & forced colors for accessibility
+<p className="text-gray-900 dark:text-gray-100 forced-colors:text-[CanvasText]">
+  Good contrast in both modes and high contrast mode
 </p>
 ```
 

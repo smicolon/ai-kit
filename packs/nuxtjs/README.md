@@ -1,6 +1,6 @@
 # Nuxt.js Development Standards Plugin
 
-Smicolon company standards for Nuxt.js/Vue 3 projects.
+Production standards and convention pack for Nuxt.js/Vue 3 projects.
 
 ## Installation
 

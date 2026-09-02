@@ -1,6 +1,6 @@
 # Django Import Patterns Reference
 
-Complete guide to Smicolon's Django import patterns.
+Complete guide to Django modular import patterns.
 
 ## Core Pattern: Absolute Modular Imports with Aliases
 

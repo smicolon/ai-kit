@@ -37,12 +37,14 @@ ai-kit init
 ai-kit init --cwd apps/web  # monorepo sub-package
 ```
 
-### `add <pack>`
+### `add <pack>` / `install [pack]`
 
-Add a pack to your project.
+Add or install packs in your project. Run without arguments to install all packs recorded in `.ai-kit.json`.
 
 ```bash
 ai-kit add django
+ai-kit install django
+ai-kit install                  # install all packs configured in .ai-kit.json
 ai-kit add django --skills-only
 ai-kit add django --agents-only
 ai-kit add django --rules-only
@@ -160,6 +162,9 @@ Tool preferences are stored globally at `~/.config/ai-kit/config.json` (pick onc
 | failure-log | - | 1 | 2 | - |
 | worktree | - | 1 | 1 | - |
 | onboard | 1 | 1 | 1 | - |
+| infisical | 1 | 3 | 5 | - |
+| clarify | 1 | 3 | 1 | 1 |
+| react-review | - | - | 4 | - |
 
 ## Monorepo Support
 

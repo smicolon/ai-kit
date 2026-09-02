@@ -63,7 +63,12 @@ ai-kit/                     # Smicolon Marketplace
 │   ├── flutter/              # Flutter mobile plugin (3 agents, 5 commands, 3 skills)
 │   ├── architect/            # System architecture plugin (1 agent, 1 command)
 │   ├── dev-loop/             # Dev loop automation (3 commands, 1 skill, 1 hook)
-│   └── failure-log/          # Failure memory plugin (2 commands, 1 skill, 2 hooks)
+│   ├── failure-log/          # Failure memory plugin (2 commands, 1 skill, 2 hooks)
+│   ├── worktree/             # Git worktree manager (1 command, 1 skill)
+│   ├── onboard/              # Engineer onboarding (1 agent, 1 command, 1 skill)
+│   ├── infisical/            # Secret management (1 agent, 5 commands, 3 skills)
+│   ├── clarify/              # Pre-implementation clarification (1 agent, 1 command, 3 skills)
+│   └── react-review/         # Four-axis branch review (4 commands)
 ├── workflows/                    # Multi-agent orchestration workflows
 │   ├── feature-development.md
 │   └── code-review.md
@@ -94,12 +99,12 @@ ai-kit/                     # Smicolon Marketplace
 /plugin install architect       # System diagrams (1 agent)
 
 # Or install all
-/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth flutter architect dev-loop failure-log
+/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth infisical flutter architect dev-loop failure-log worktree onboard clarify react-review
 ```
 
 ## Agent System
 
-### Agent Categories (27 Total Across 11 Plugins)
+### Agent Categories (30 Total Across 12 Plugins with Agents)
 
 **django Plugin** (5 agents):
 - `@django-architect` - Architecture design
@@ -146,6 +151,15 @@ ai-kit/                     # Smicolon Marketplace
 **architect Plugin** (1 agent):
 - `@system-architect` - Eraser.io diagram-as-code specialist (ERD, flowcharts, cloud, sequence, BPMN)
 
+**infisical Plugin** (1 agent):
+- `@infisical-ops` - Secret management operations, auth configuration, CLI guidance, CI/CD integration
+
+**onboard Plugin** (1 agent):
+- `@onboard-guide` - Ongoing personalized onboarding guidance and Q&A
+
+**clarify Plugin** (1 agent):
+- `@clarifier` - Pre-implementation task clarification and flow disambiguation
+
 ### Agent Usage Pattern
 
 Agents are invoked with `@agent-name` syntax in Claude Code. They enforce specific conventions for each framework through detailed prompt engineering. Each plugin's agents are only available when that plugin is installed.
@@ -154,7 +168,7 @@ Agents are invoked with `@agent-name` syntax in Claude Code. They enforce specif
 
 Each plugin includes specialized slash commands that provide interactive workflows for common development tasks.
 
-### Command Categories (24 Total)
+### Command Categories (39 Total Across 14 Plugins with Commands)
 
 **django Commands:**
 - `/model-create` - Create Django models following Smicolon conventions
@@ -205,6 +219,28 @@ Each plugin includes specialized slash commands that provide interactive workflo
 - `/failure-add` - Log a mistake to prevent repeating it
 - `/failure-list` - View all logged failures
 
+**worktree Commands:**
+- `/wt` - Manage git worktrees for parallel feature development with automatic env copying and DB/Docker isolation
+
+**onboard Commands:**
+- `/onboard` - Interactive onboarding flow (skill assessment, project analysis, task planning)
+
+**infisical Commands:**
+- `/infisical-init` - Initialize project with Infisical workspace
+- `/infisical-auth` - Configure authentication (user, machine, or CI context)
+- `/infisical-scan` - Scan codebase for exposed secrets and hardcoded credentials
+- `/infisical-env-sync` - Export/sync secrets to .env files or other formats
+- `/infisical-ci-setup` - Generate CI/CD pipeline configs (GitHub, GitLab, CircleCI, Jenkins, Bitbucket)
+
+**clarify Commands:**
+- `/clarify` - Pre-implementation task clarification (detects flows, resolves ambiguity, generates execution context)
+
+**react-review Commands:**
+- `/review-arch` - Architecture, code quality, TypeScript strictness, and React/Next.js patterns review
+- `/review-perf` - Rendering efficiency, memoization, data fetching, and bundle impact review
+- `/review-a11y` - Accessibility (WCAG 2.1 AA) and responsive behavior review
+- `/review-ui` - UI/UX polish, spacing, typography, and interactive states review
+
 ### Command Usage Pattern
 
 Commands are invoked with `/command-name` syntax. They provide step-by-step interactive workflows:
@@ -222,6 +258,25 @@ Commands are invoked with `/command-name` syntax. They provide step-by-step inte
 # Create a system diagram
 /diagram-create
 ```
+
+## Skill System
+
+Auto-enforcing skills (46 total across 14 plugins) activate automatically based on context to enforce conventions without manual invocation:
+
+- **django (8 skills)**: `import-convention-enforcer`, `model-entity-validator`, `security-first-validator`, `test-coverage-advisor`, `performance-optimizer`, `migration-safety-checker`, `test-validity-checker`, `red-phase-verifier`
+- **tanstack-router (11 skills)**: `router-patterns`, `query-patterns`, `form-patterns`, `table-patterns`, `virtual-patterns`, `store-patterns`, `db-patterns`, `ai-patterns`, `pacer-patterns`, `devtools-patterns`, `tanstack-conventions`
+- **hono (4 skills)**: `hono-patterns`, `cloudflare-bindings`, `zod-validation`, `rpc-typesafe`
+- **nextjs (3 skills)**: `accessibility-validator`, `react-form-validator`, `import-convention-enforcer`
+- **nuxtjs (3 skills)**: `accessibility-validator`, `veevalidate-form-validator`, `import-convention-enforcer`
+- **flutter (3 skills)**: `flutter-architecture`, `fastlane-knowledge`, `store-publishing`
+- **infisical (3 skills)**: `infisical-patterns`, `infisical-ci-integration`, `secret-hygiene`
+- **clarify (3 skills)**: `flow-detector`, `flow-selector`, `execution-context-builder`
+- **nestjs (2 skills)**: `barrel-export-manager`, `import-convention-enforcer`
+- **better-auth (2 skills)**: `better-auth-patterns`, `auth-security`
+- **dev-loop (1 skill)**: `tdd-planner`
+- **failure-log (1 skill)**: `failure-log-manager`
+- **worktree (1 skill)**: `worktree-manager`
+- **onboard (1 skill)**: `onboard-context-provider`
 
 ## Workflow System
 
@@ -360,11 +415,11 @@ import { User } from '../entities'
 /plugin install architect       # System architecture only
 
 # Or install all
-/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth flutter architect dev-loop failure-log
+/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth infisical flutter architect dev-loop failure-log worktree onboard clarify react-review
 
 # Update plugins
 /plugin update django
-/plugin update django nestjs nextjs nuxtjs hono tanstack-router better-auth flutter architect dev-loop failure-log
+/plugin update django nestjs nextjs nuxtjs hono tanstack-router better-auth infisical flutter architect dev-loop failure-log worktree onboard clarify react-review
 ```
 
 ### Testing Installation

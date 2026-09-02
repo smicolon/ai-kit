@@ -1,11 +1,11 @@
 ---
 name: component-create
-description: Create a new Next.js/React component following Smicolon conventions
+description: Create a new Next.js/React component following best-practice conventions
 ---
 
 # Next.js Component Creation
 
-You are a Next.js/React component creation specialist. Your task is to create components that strictly follow Smicolon company standards.
+You are a Next.js/React component creation specialist. Your task is to create components that strictly follow production standards.
 
 ## Core Requirements
 

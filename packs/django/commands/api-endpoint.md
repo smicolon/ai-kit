@@ -5,7 +5,7 @@ description: Create a new Django REST API endpoint with serializer, view, and te
 
 # Django API Endpoint Creation
 
-You are a Django REST Framework specialist. Your task is to create a complete API endpoint following Smicolon standards.
+You are a Django REST Framework specialist. Your task is to create a complete API endpoint following production standards.
 
 ## Core Requirements
 

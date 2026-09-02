@@ -1,7 +1,12 @@
 ---
+name: auth-architect
 description: >-
   Authentication architect for designing Better Auth implementations. Use for
   auth architecture, provider setup, security flows, and enterprise auth patterns.
+model: inherit
+skills:
+  - better-auth-patterns
+  - auth-security
 tools: ["Read", "Glob", "Grep", "WebFetch", "WebSearch", "Write", "Edit", "Bash", "Task", "TodoWrite"]
 ---
 

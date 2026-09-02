@@ -1,6 +1,20 @@
 ---
+name: tanstack-builder
 description: >-
   Expert TanStack developer for implementing production-ready React SPA features with Router, Query, Form, Table, Virtual and full ecosystem. Use for building features, components, and integrations.
+model: inherit
+skills:
+  - router-patterns
+  - query-patterns
+  - form-patterns
+  - table-patterns
+  - virtual-patterns
+  - store-patterns
+  - db-patterns
+  - ai-patterns
+  - pacer-patterns
+  - devtools-patterns
+  - tanstack-conventions
 tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "Task", "TodoWrite"]
 ---
 

@@ -148,19 +148,22 @@ Before committing changes to a plugin:
 
 | Plugin | Version | Status | Notes |
 |--------|---------|--------|-------|
-| django | 2.1.1 | Mature | Production-tested |
-| nestjs | 2.1.1 | Mature | Production-tested |
-| nextjs | 2.1.1 | Mature | Production-tested |
-| nuxtjs | 2.1.1 | Mature | Production-tested |
-| dev-loop | 1.2.2 | Stable | TDD automation |
+| django | 2.1.2 | Mature | Production-tested |
+| nestjs | 2.1.2 | Mature | Production-tested |
+| nextjs | 2.1.2 | Mature | Production-tested |
+| nuxtjs | 2.1.2 | Mature | Production-tested |
 | architect | 1.0.0 | Stable | Diagram generation |
-| failure-log | 1.0.1 | Stable | Failure memory |
-| hono | 0.1.1 | New | Needs testing |
-| flutter | 0.1.1 | New | Needs testing |
-| tanstack-router | 0.1.0 | New | Needs testing |
-| better-auth | 0.1.1 | New | Needs testing |
-| worktree | 0.1.1 | New | Git worktree manager |
-| onboard | 0.1.0 | New | Engineer onboarding |
+| dev-loop | 1.2.4 | Stable | TDD automation |
+| failure-log | 1.0.2 | Stable | Failure memory |
+| flutter | 0.1.2 | New | Mobile & store publishing |
+| hono | 0.1.2 | New | Edge API framework |
+| tanstack-router | 0.1.1 | New | React SPA ecosystem |
+| better-auth | 0.1.2 | New | Authentication integration |
+| worktree | 0.5.2 | New | Git worktree manager |
+| onboard | 0.1.1 | New | Engineer onboarding |
+| infisical | 0.1.2 | New | Secret management |
+| clarify | 0.1.1 | New | Pre-implementation clarification |
+| react-review | 0.1.1 | New | Four-axis branch review |
 
 ## Promotion Criteria
 

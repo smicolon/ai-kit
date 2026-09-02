@@ -8,14 +8,16 @@
  *   node scripts/bump-plugin-versions.js <base-ref>  # diff <base-ref>
  */
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const MARKETPLACE_PATH = path.resolve(
   __dirname,
-  "../.claude-plugin/marketplace.json"
-);
+  '../.claude-plugin/marketplace.json'
+)
 
 function getChangedFiles(baseRef) {
   const ref = baseRef || "HEAD~1";

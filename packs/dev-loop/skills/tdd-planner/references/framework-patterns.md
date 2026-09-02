@@ -440,7 +440,7 @@ Run test command for the detected test framework
 
 ## Framework-Specific Considerations
 
-### Django + Smicolon Conventions
+### Django Production Conventions
 
 - Use absolute modular imports: `import app.models as _app_models`
 - UUID primary keys on all models
@@ -448,21 +448,21 @@ Run test command for the detected test framework
 - Soft deletes: `is_deleted` field
 - Service layer for business logic
 
-### NestJS + Smicolon Conventions
+### NestJS Production Conventions
 
 - Barrel exports in all directories
 - Absolute imports: `import { X } from 'src/module/entities'`
 - UUID primary keys
 - TypeORM soft deletes with `@DeleteDateColumn()`
 
-### Next.js + Smicolon Conventions
+### Next.js Production Conventions
 
 - Path aliases: `@/components`, `@/hooks`
 - React Hook Form + Zod for forms
 - TanStack Query for data fetching
 - WCAG 2.1 AA accessibility
 
-### Nuxt.js + Smicolon Conventions
+### Nuxt.js Production Conventions
 
 - Path aliases: `~/components`, `~/composables`
 - VeeValidate + Zod for forms

@@ -1,6 +1,6 @@
-# System Architecture Standards Plugin
+# System Architect Plugin
 
-Smicolon company standards for system architecture and diagram-as-code.
+Production standards for system architecture and diagram-as-code.
 
 ## Installation
 

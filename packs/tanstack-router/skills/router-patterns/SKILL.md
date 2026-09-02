@@ -240,6 +240,84 @@ export const Route = createFileRoute('/posts')({
 })
 ```
 
+## TanStack Start Fullstack SSR Patterns
+
+TanStack Start extends TanStack Router into a full-stack SSR framework powered by Nitro.
+
+### Server Functions (`createServerFn`)
+
+Define type-safe RPC endpoints callable from loaders, hooks, or actions:
+
+```typescript
+// server/posts.ts
+import { createServerFn } from '@tanstack/start'
+import { z } from 'zod'
+import { db } from './db'
+
+export const getPost = createServerFn({ method: 'GET' })
+  .validator((d: string) => z.string().parse(d))
+  .handler(async ({ data: postId }) => {
+    // Executes strictly on the server
+    const post = await db.post.findUnique({ where: { id: postId } })
+    if (!post) throw new Error('Not found')
+    return post
+  })
+
+export const createPost = createServerFn({ method: 'POST' })
+  .validator((d: { title: string; content: string }) =>
+    z.object({ title: z.string().min(1), content: z.string() }).parse(d)
+  )
+  .handler(async ({ data }) => {
+    return await db.post.create({ data })
+  })
+```
+
+### SSR Loaders with Server Functions
+
+Loaders run on the server during initial SSR and hydrate seamlessly on the client:
+
+```typescript
+// routes/posts.$postId.tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { getPost } from '@/server/posts'
+
+export const Route = createFileRoute('/posts/$postId')({
+  loader: async ({ params }) => {
+    return await getPost({ data: params.postId })
+  },
+  component: PostComponent,
+})
+
+function PostComponent() {
+  const post = Route.useLoaderData()
+  return (
+    <main>
+      <h1>{post.title}</h1>
+      <div>{post.content}</div>
+    </main>
+  )
+}
+```
+
+### Nitro Universal Deployment Configuration
+
+TanStack Start utilizes Nitro for zero-config deployments to Bun, Node, Cloudflare Workers, or Vercel:
+
+```typescript
+// app.config.ts
+import { defineConfig } from '@tanstack/start/config'
+import tsConfigPaths from 'vite-tsconfig-paths'
+
+export default defineConfig({
+  vite: {
+    plugins: [tsConfigPaths()],
+  },
+  server: {
+    preset: process.env.NITRO_PRESET || 'node-server', // 'bun', 'cloudflare-pages', 'vercel', etc.
+  },
+})
+```
+
 ## Conventions to Enforce
 
 1. **Always use `createFileRoute`** - Never manual route configuration

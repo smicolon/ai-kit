@@ -15,230 +15,204 @@ This workflow provides a systematic approach to reviewing code across security, 
 
 ### Phase 1: Convention Compliance
 
-**Focus:** Verify adherence to Smicolon standards
+**Focus:** Verify adherence to Smicolon standards across frameworks
 
 **Checks:**
-- [ ] Import patterns (absolute imports with aliases)
+- [ ] Import patterns (absolute imports with aliases, path aliases)
 - [ ] Model/entity standard fields (UUID, timestamps, soft delete)
-- [ ] Service layer separation (no business logic in views/controllers)
-- [ ] Type hints/TypeScript types present
-- [ ] Validation rules on all inputs
-- [ ] Permissions/guards configured
+- [ ] Service layer separation (no business logic in views/controllers/route handlers)
+- [ ] Type safety (strict TypeScript, Python type hints, Dart null safety)
+- [ ] Validation rules on all inputs (DRF serializers, Zod schemas, class-validator)
+- [ ] Permissions/guards configured on protected routes
 
 **Actions:**
 ```
-1. Review import statements
+1. Review import statements:
    - Django: `import app.models as _app_models`
    - NestJS: `import { Entity } from 'src/module/entities'`
+   - Next.js / TanStack: `@/components/ui/button`, `@/features/auth`
+   - Nuxt.js: `~/utils/date`
+   - Hono: Sub-app routing with typed context
 
-2. Verify model/entity structure
+2. Verify model/entity structure:
    - UUID primary keys
    - created_at, updated_at timestamps
    - is_deleted or deletedAt for soft deletes
+   - Flutter: Immutable domain models with copyWith
 
-3. Check business logic location
-   - Should be in service layer
-   - Not in views/controllers
+3. Check business logic location:
+   - Service layer / repositories
+   - Not in views, controllers, route handlers, or UI widgets
 
-4. Verify type safety
-   - Python: Type hints on function parameters
-   - TypeScript: No `any` types
+4. Verify type safety:
+   - Python: Type hints on all function parameters and returns
+   - TypeScript: Strict mode, zero `any` types
+   - Dart: Sound null safety without unnecessary `!` assertions
 ```
 
-### Phase 2: Security Review
+### Phase 2: Security & Secret Review
 
-**Focus:** Identify security vulnerabilities
+**Focus:** Identify security vulnerabilities, access control flaws, and exposed credentials
 
 **Checks:**
-- [ ] Authentication required on protected endpoints
-- [ ] Authorization checks (permissions/guards)
-- [ ] Input validation and sanitization
-- [ ] SQL injection prevention (ORM usage)
-- [ ] XSS prevention (proper escaping)
-- [ ] CSRF protection configured
-- [ ] Rate limiting on public endpoints
-- [ ] Secrets not hardcoded
-- [ ] Sensitive data properly encrypted
+- [ ] Authentication required on protected endpoints / routes
+- [ ] Authorization checks (permissions, guards, role checks)
+- [ ] Input validation and sanitization (Zod schemas, serializers)
+- [ ] SQL injection prevention (ORM usage, parameterized D1 queries)
+- [ ] XSS prevention (proper escaping, safe HTML rendering)
+- [ ] CSRF and session cookie security (SameSite, HttpOnly, secure)
+- [ ] Rate limiting on public and auth endpoints
+- [ ] Secrets not hardcoded in code or committed in .env files
+- [ ] Sensitive data properly encrypted at rest and in transit
 
 **Actions:**
 ```
-1. @django-reviewer "Review for security vulnerabilities"
+1. Framework security reviews:
+   - Django: @django-reviewer "Comprehensive security audit"
+   - Hono: @hono-reviewer "Audit Edge API security and route authorization"
 
-2. Check authentication:
-   - All views have `permission_classes`
-   - All controllers have `@UseGuards()`
+2. Secret hygiene scan:
+   - /infisical-scan (scans codebase for exposed keys, credentials, and tokens)
 
-3. Verify input validation:
-   - Django: Serializers with validators
-   - NestJS: DTOs with class-validator
-   - Next.js: Zod schemas on forms
-
-4. Check for common vulnerabilities:
-   - Raw SQL queries
-   - Eval/exec usage
-   - Unvalidated redirects
-   - File upload vulnerabilities
+3. Verify authentication & session protection:
+   - Better Auth: Verify password policy, 2FA enforcement, and session expiry
+   - Django: All views have `permission_classes`
+   - NestJS: All controllers have `@UseGuards()`
+   - Hono: Auth middleware applied before protected route handlers
 ```
 
 ### Phase 3: Performance Review
 
-**Focus:** Identify performance issues
+**Focus:** Identify database, rendering, network, and bundle performance issues
 
 **Checks:**
-- [ ] Database query optimization
-- [ ] N+1 query prevention (select_related, prefetch_related)
-- [ ] Proper indexing
-- [ ] Caching where appropriate
-- [ ] Pagination on large datasets
-- [ ] Lazy loading implemented
-- [ ] Bundle size optimization (frontend)
-- [ ] Image optimization
+- [ ] Database query optimization and N+1 prevention (select_related, prefetch_related)
+- [ ] Proper database indexing on queried and filtered columns
+- [ ] Caching where appropriate (Redis, KV, TanStack Query staleTime)
+- [ ] Pagination on large datasets (cursor or offset-based)
+- [ ] React/Next.js rendering efficiency and memoization
+- [ ] Edge execution limits (Cloudflare Workers CPU time, memory limits)
+- [ ] Bundle size optimization (dynamic imports, code splitting)
+- [ ] Image optimization (next/image, nuxt/image, responsive assets)
 
 **Actions:**
 ```
-1. Review database queries:
-   - Use select_related() for foreign keys
-   - Use prefetch_related() for many-to-many
-   - Add indexes for frequently queried fields
+1. React & Next.js Performance:
+   - Run `/review-perf` to audit rendering cost, unneeded re-renders, and query cache keys
 
-2. Check API responses:
-   - Pagination on list endpoints
-   - Only return necessary fields
-   - Caching for expensive operations
+2. Backend Database queries:
+   - Django: Verify select_related() and prefetch_related()
+   - NestJS: Verify relations loading strategy
+   - Hono / D1: Verify prepared statements and indexing
 
-3. Frontend performance:
-   - Code splitting
-   - Image optimization (next/image, nuxt/image)
-   - Lazy loading components
+3. Edge & Worker performance:
+   - Hono: Audit sub-request limits and KV/D1 roundtrips with @hono-reviewer
 ```
 
-### Phase 4: Testing Coverage
+### Phase 4: Accessibility (a11y) & Visual UI Review
 
-**Focus:** Ensure adequate test coverage
+**Focus:** Verify user experience, keyboard accessibility, and visual fidelity
+
+**Checks:**
+- [ ] WCAG 2.1 AA compliance
+- [ ] Semantic HTML (`<button>`, `<main>`, `<nav>`, `<dialog>`)
+- [ ] Keyboard navigation and visible focus rings
+- [ ] ARIA roles and accessible names on interactive elements
+- [ ] Color contrast ratios (text and UI components)
+- [ ] Mobile responsive layout across all standard breakpoints
+- [ ] Visual fidelity matching design specifications
+
+**Actions:**
+```
+1. Run accessibility review:
+   - /review-a11y (audits ARIA, focus traps, semantic tags, and screen reader friendliness)
+
+2. Run UI/UX review:
+   - /review-ui (audits spacing rhythm, typography, interaction states, and loading/error UX)
+
+3. Visual QA:
+   - @frontend-visual (automated Playwright tests and Figma design comparison)
+```
+
+### Phase 5: Architecture & Code Quality
+
+**Focus:** Maintainability, modularity, and framework architectural patterns
+
+**Checks:**
+- [ ] Adherence to framework architecture (Django services, NestJS modules, Hono sub-apps, Flutter clean arch)
+- [ ] Clear, descriptive naming conventions
+- [ ] Small, focused functions (< 50 lines) and cohesive classes/modules
+- [ ] No duplicated business logic (DRY)
+- [ ] Graceful error handling and typed failure results
+- [ ] Clean barrel exports without circular dependencies
+
+**Actions:**
+```
+1. Run architectural review:
+   - /review-arch (audits React/Next.js structural boundaries, hook patterns, and separation of concerns)
+
+2. Multi-framework architectural review:
+   - @django-architect / @hono-architect / @tanstack-architect / @flutter-architect
+```
+
+### Phase 6: Testing Coverage
+
+**Focus:** Ensure comprehensive automated test coverage
 
 **Checks:**
 - [ ] Test coverage ≥ 90%
-- [ ] Unit tests for all services/business logic
-- [ ] Integration tests for API endpoints
-- [ ] E2E tests for critical user flows
-- [ ] Edge cases covered
-- [ ] Error scenarios tested
-- [ ] Permission/guard tests
+- [ ] Unit tests for all services and business logic
+- [ ] Integration tests for API endpoints and RPC contracts
+- [ ] E2E tests for critical user workflows
+- [ ] Edge cases, error paths, and validation errors covered
+- [ ] Permission and authorization tests present
 
 **Actions:**
 ```
-1. Run coverage report:
+1. Run framework test suites:
    - Django: `coverage run && coverage report`
    - NestJS: `npm run test:cov`
-   - Next.js: `npm run test -- --coverage`
+   - Next.js / Nuxt.js / TanStack: `npm test -- --coverage`
+   - Hono: `bun test`
+   - Flutter: `/flutter-test`
 
-2. Verify test types exist:
-   - Unit: Test individual functions
-   - Integration: Test API endpoints
-   - E2E: Test complete workflows
-
-3. Check test quality:
-   - Clear test names
-   - Proper assertions
-   - Isolated tests (no dependencies)
-   - Mocked external dependencies
+2. Verify test quality:
+   - Meaningful assertion messages
+   - Isolated tests without cross-test state leakage
+   - Proper mocks for external third-party services
 ```
 
-### Phase 5: Code Quality
+## Usage Examples
 
-**Focus:** General code quality and maintainability
-
-**Checks:**
-- [ ] Clear, descriptive naming
-- [ ] Functions/methods < 50 lines
-- [ ] Classes < 300 lines
-- [ ] No code duplication
-- [ ] Comments explain "why" not "what"
-- [ ] Error handling present
-- [ ] Logging appropriate
-- [ ] No dead code
-
-**Actions:**
-```
-1. Review naming:
-   - Functions: Verb-based (createUser, validateEmail)
-   - Variables: Descriptive (userEmail, not e)
-   - Classes: Noun-based (UserService, ProductController)
-
-2. Check function complexity:
-   - Extract long functions
-   - Reduce nesting (early returns)
-   - Single responsibility
-
-3. Verify error handling:
-   - Try-catch around external calls
-   - Proper error messages
-   - Logging for debugging
-```
-
-### Phase 6: Documentation
-
-**Focus:** Code is properly documented
-
-**Checks:**
-- [ ] API endpoints documented (Swagger/OpenAPI)
-- [ ] Complex functions have docstrings
-- [ ] README updated if needed
-- [ ] Migration guides for breaking changes
-- [ ] Environment variables documented
-
-**Actions:**
-```
-1. Check API documentation:
-   - Django: drf-spectacular annotations
-   - NestJS: @ApiOperation decorators
-   - Generated docs accessible
-
-2. Verify code documentation:
-   - Python: Docstrings on classes/functions
-   - TypeScript: JSDoc comments
-   - Complex logic explained
-
-3. Update project docs:
-   - README for new features
-   - Migration guides for changes
-   - Environment setup if changed
-```
-
-## Usage Example
-
-### Full Review
-
+### 1. Full Review (Django + React/Next.js)
 ```bash
-# 1. Convention compliance
-"Review imports, model structure, and service layer separation"
+# 1. Security & secret audit
+@django-reviewer "Comprehensive security audit of authentication and billing"
+/infisical-scan
 
-# 2. Security review
-@django-reviewer "Comprehensive security audit of authentication module"
+# 2. Four-axis React review
+/review-arch
+/review-perf
+/review-a11y
+/review-ui
 
-# 3. Performance check
-"Review database queries, identify N+1 issues, check indexes"
-
-# 4. Test coverage
-@django-tester "Verify test coverage for authentication module"
-
-# 5. Code quality
-"Review naming, function size, error handling"
-
-# 6. Documentation
-"Verify API documentation and docstrings"
+# 3. Test verification
+@django-tester "Verify test coverage meets 90% threshold"
+@frontend-tester "Verify E2E checkout tests"
 ```
 
-### Quick Security Review
-
+### 2. Edge API Review (Hono + Cloudflare)
 ```bash
-@django-reviewer "Security audit of API endpoints"
+# Security & performance review
+@hono-reviewer "Review API routes, D1 queries, and Cloudflare bindings"
+/infisical-scan
 ```
 
-### Performance Review
-
+### 3. Mobile Review (Flutter)
 ```bash
-"Review all database queries for N+1 issues and missing indexes"
+# Code and store readiness review
+/flutter-test
+@release-manager "Review iOS and Android compliance for App Store release"
 ```
 
 ## Review Checklist Template

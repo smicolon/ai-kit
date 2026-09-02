@@ -1,7 +1,27 @@
 export type ToolId =
-  | 'claude-code' | 'cursor' | 'windsurf' | 'copilot' | 'codex'
-  | 'cline' | 'continue' | 'gemini' | 'junie' | 'kiro'
-  | 'amp' | 'antigravity' | 'augment' | 'roo-code' | 'amazon-q'
+  | 'claude-code'
+  | 'cursor'
+  | 'windsurf'
+  | 'copilot'
+  | 'codex'
+  | 'cline'
+  | 'continue'
+  | 'gemini'
+  | 'junie'
+  | 'kiro'
+  | 'amp'
+  | 'antigravity'
+  | 'augment'
+  | 'roo-code'
+  | 'amazon-q'
+  | 'opencode'
+  | 'goose'
+  | 'zed'
+  | 'trae'
+  | 'devin'
+  | 'openhands'
+  | 'replit'
+  | 'universal'
 
 export type ComponentType = 'agents' | 'skills' | 'commands' | 'rules' | 'hooks'
 
@@ -44,6 +64,8 @@ export interface ResolvedPack {
   hooks: string[]
   mcpServers?: string
 }
+
+export type Pack = ResolvedPack
 
 export interface AiKitConfig {
   version: string

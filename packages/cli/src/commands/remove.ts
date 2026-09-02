@@ -1,17 +1,43 @@
 import { Command } from 'commander'
 import path from 'node:path'
 import pc from 'picocolors'
+import * as p from '@clack/prompts'
 import { readConfig, writeConfig, removePack as removeFromConfig } from '../config.js'
 import { findOrphans, removePack } from '../installer.js'
 import { findPack } from '../discovery.js'
 
 export const removeCommand = new Command('remove')
   .description('Remove a pack from your project')
-  .argument('<pack>', 'Pack name to remove')
+  .argument('[pack]', 'Pack name to remove — omit for interactive picker')
   .option('--cwd <dir>', 'Project directory')
-  .action(async (packName: string, opts: { cwd?: string }) => {
-    const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
-    const config = readConfig(projectDir)
+export async function runRemove(packName?: string, opts: { cwd?: string } = {}) {
+  const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
+  let config = readConfig(projectDir)
+
+    if (!packName) {
+      if (!config || Object.keys(config.packs).length === 0) {
+        console.log(pc.dim('No packs currently installed in this project.'))
+        return
+      }
+
+      const installed = Object.keys(config.packs)
+      const selection = await p.select({
+        message: 'Which pack do you want to remove?',
+        options: installed.map(name => ({
+          value: name,
+          label: name,
+          hint: `v${config!.packs[name]?.version ?? '0.0.0'}`,
+        })),
+      })
+
+      if (p.isCancel(selection)) {
+        console.log(pc.dim('Cancelled.'))
+        return
+      }
+
+      packName = selection as string
+    }
+
     const packConfig = config?.packs[packName]
     const trackedFiles = packConfig?.files ?? []
 
@@ -75,4 +101,6 @@ export const removeCommand = new Command('remove')
       writeConfig(projectDir, removeFromConfig(config!, packName))
       console.log(pc.dim('Config updated.'))
     }
-  })
+}
+
+removeCommand.action(runRemove)

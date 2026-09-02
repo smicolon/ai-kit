@@ -504,19 +504,32 @@ function LoginForm() {
 }
 ```
 
-## Server Actions Integration (Next.js 14+)
+## Server Actions & React 19 Integration
+
+React 19 / Next.js 15 provides native Server Actions with `useActionState` and `useOptimistic`, combined with Zod validation.
+
+### Server Action with Zod Schema Validation
 
 ```tsx
 'use server'
 import { z } from 'zod'
 
 const contactSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  message: z.string().min(10),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
 })
 
-export async function submitContact(formData: FormData) {
+export type FormState = {
+  success?: boolean
+  errors?: Record<string, string[]>
+  message?: string
+}
+
+export async function submitContact(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   const data = {
     name: formData.get('name'),
     email: formData.get('email'),
@@ -526,12 +539,103 @@ export async function submitContact(formData: FormData) {
   const result = contactSchema.safeParse(data)
 
   if (!result.success) {
-    return { success: false, errors: result.error.flatten() }
+    return {
+      success: false,
+      errors: result.error.flatten().fieldErrors,
+    }
   }
 
-  // Process valid data
+  // Process valid data securely on server
   await saveContact(result.data)
-  return { success: true }
+  return { success: true, message: 'Message sent successfully!' }
+}
+```
+
+### Client Form with React 19 `useActionState` & `useOptimistic`
+
+```tsx
+'use client'
+
+import { useActionState, useOptimistic } from 'react'
+import { submitContact, type FormState } from './actions'
+
+const initialState: FormState = {}
+
+export function ContactForm() {
+  const [state, formAction, isPending] = useActionState(submitContact, initialState)
+  const [optimisticStatus, setOptimisticStatus] = useOptimistic(
+    isPending,
+    (_, pending: boolean) => pending
+  )
+
+  return (
+    <form action={formAction} className="space-y-4">
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          aria-invalid={!!state.errors?.name}
+          aria-describedby={state.errors?.name ? 'name-error' : undefined}
+          className="mt-1 block w-full rounded-md border-gray-300"
+        />
+        {state.errors?.name && (
+          <p id="name-error" className="mt-1 text-sm text-red-600" role="alert">
+            {state.errors.name[0]}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          aria-invalid={!!state.errors?.email}
+          aria-describedby={state.errors?.email ? 'email-error' : undefined}
+          className="mt-1 block w-full rounded-md border-gray-300"
+        />
+        {state.errors?.email && (
+          <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+            {state.errors.email[0]}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows={4}
+          aria-invalid={!!state.errors?.message}
+          aria-describedby={state.errors?.message ? 'message-error' : undefined}
+          className="mt-1 block w-full rounded-md border-gray-300"
+        />
+        {state.errors?.message && (
+          <p id="message-error" className="mt-1 text-sm text-red-600" role="alert">
+            {state.errors.message[0]}
+          </p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={optimisticStatus}
+        className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+      >
+        {optimisticStatus ? 'Sending...' : 'Send Message'}
+      </button>
+
+      {state.success && (
+        <p className="text-sm text-green-600" role="status">
+          {state.message}
+        </p>
+      )}
+    </form>
+  )
 }
 ```
 

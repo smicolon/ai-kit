@@ -43,10 +43,23 @@ function createSymlink(target: string, linkPath: string): void {
     if (stat.isSymbolicLink()) fs.unlinkSync(linkPath)
     else return
   }
-  const type = process.platform === 'win32' ? 'junction' : undefined
-  fs.symlinkSync(target, linkPath, type)
-  trackFile(linkPath)
+  try {
+    const type = process.platform === 'win32' ? 'junction' : undefined
+    fs.symlinkSync(target, linkPath, type)
+    trackFile(linkPath)
+  } catch {
+    // Fallback: copy files if symlinking fails (e.g. Windows without dev mode)
+    const absTarget = path.resolve(path.dirname(linkPath), target)
+    if (fs.existsSync(absTarget)) {
+      if (fs.statSync(absTarget).isDirectory()) {
+        copyDir(absTarget, linkPath)
+      } else {
+        copyFile(absTarget, linkPath)
+      }
+    }
+  }
 }
+
 
 function installSkills(
   skillDirs: string[],
@@ -177,12 +190,41 @@ function installHooks(
       projectHooksPath,
       JSON.stringify({ hooks: existing }, null, 2) + '\n',
     )
-    trackFile(projectHooksPath)
 
     count++
   }
 
   return count
+}
+
+interface McpConfig {
+  mcpServers?: Record<string, unknown>
+  [key: string]: unknown
+}
+
+function installMcpServers(mcpFile: string, projectDir: string): void {
+  try {
+    const raw = JSON.parse(fs.readFileSync(mcpFile, 'utf-8')) as McpConfig
+    if (!raw.mcpServers || Object.keys(raw.mcpServers).length === 0) return
+
+    const destMcpPath = path.join(projectDir, '.mcp.json')
+    let existing: McpConfig = { mcpServers: {} }
+    if (fs.existsSync(destMcpPath)) {
+      try {
+        existing = JSON.parse(fs.readFileSync(destMcpPath, 'utf-8')) as McpConfig
+      } catch {
+        existing = { mcpServers: {} }
+      }
+    }
+    existing.mcpServers = {
+      ...(existing.mcpServers ?? {}),
+      ...raw.mcpServers,
+    }
+    ensureDir(path.dirname(destMcpPath))
+    fs.writeFileSync(destMcpPath, JSON.stringify(existing, null, 2) + '\n')
+  } catch {
+    // Ignore invalid MCP format
+  }
 }
 
 function findScriptFiles(dir: string): string[] {
@@ -241,6 +283,10 @@ export function installPack(options: InstallOptions): InstallResult {
     installed.hooks = installHooks(pack.hooks, tools, projectDir)
   }
 
+  if (pack.mcpServers && tools.includes('claude-code') && fs.existsSync(pack.mcpServers)) {
+    installMcpServers(pack.mcpServers, projectDir)
+  }
+
   return { pack: pack.name, tools, installed, files: [...trackedFiles] }
 }
 
@@ -252,6 +298,15 @@ export function removePack(projectDir: string, files: string[]): number {
   let removed = 0
 
   for (const relFile of files) {
+    // Never delete shared configuration files
+    if (
+      relFile === '.claude/hooks.json' ||
+      relFile === path.join('.claude', 'hooks.json') ||
+      relFile === '.mcp.json'
+    ) {
+      continue
+    }
+
     const absPath = path.join(projectDir, relFile)
     if (!fs.existsSync(absPath) && !isSymlink(absPath)) continue
 

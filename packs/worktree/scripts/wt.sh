@@ -241,7 +241,7 @@ copy_matched_files() {
         local dir=$(dirname "$rel")
         [[ "$dir" != "." ]] && mkdir -p "$dst/$dir"
         cp "$src/$rel" "$dst/$rel"
-        ((count++))
+        count=$((count + 1))
     done
 
     echo "$count"
@@ -362,7 +362,9 @@ rewrite_all_env_files() {
         [[ "$basename_f" == .env* ]] || continue
         local result
         result=$(rewrite_env_file "$env_file" "$branch_slug")
-        [[ "$result" == "true" ]] && ((count++))
+        if [[ "$result" == "true" ]]; then
+            count=$((count + 1))
+        fi
     done < <(find "$wt_path" -type f -name '.env*' -not -path '*/node_modules/*' -not -path '*/.git/*' -print0 2>/dev/null)
 
     echo "$count"
@@ -1003,7 +1005,7 @@ cmd_list() {
             local branch_display=$(get_branch_from_worktree "$wt_path")
             echo -e "  ${YELLOW}○${NC} $wt_path ${YELLOW}($branch_display)${NC}"
         fi
-        ((found++))
+        found=$((found + 1))
     done < <(git worktree list --porcelain | grep "^worktree " | sed 's/^worktree //')
 
     if [[ "$found" -eq 0 ]]; then

@@ -6,7 +6,7 @@ skills:
   - accessibility-validator
 ---
 
-# Frontend Visual QA - Smicolon
+# Frontend Visual QA Specialist
 
 You are a senior frontend visual QA specialist using Playwright MCP and Figma MCP for pixel-perfect implementation and visual debugging.
 

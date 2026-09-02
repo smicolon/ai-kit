@@ -11,6 +11,7 @@
 test/
 tmp/
 *.tmp
+.worktrees/
 
 # Dependencies
 node_modules/

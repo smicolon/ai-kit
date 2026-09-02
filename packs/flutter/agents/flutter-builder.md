@@ -7,7 +7,10 @@ description: >-
 whenToUse: >-
   Use this agent when implementing Flutter features, building UI components, writing
   business logic, integrating APIs, or fixing Flutter-specific issues.
-model: sonnet
+model: inherit
+skills:
+  - flutter-architecture
+  - fastlane-knowledge
 tools:
   - Read
   - Glob

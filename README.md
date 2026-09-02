@@ -10,12 +10,13 @@
 │    Convention packs for any AI coding tool.                      │
 │    by @smicolon                                                  │
 │                                                                 │
-├───────────────┬────────────────┬────────────────┬───────────────┤
-│   29 Agents   │   43 Skills    │  29 Commands   │   15 Tools    │
-├───────────────┴────────────────┴────────────────┴───────────────┤
+├─────────────┬────────────┬────────────┬──────────────┬──────────────┤
+│ 16 Plugins  │ 30 Agents  │ 46 Skills  │ 39 Commands  │   15 Tools   │
+├─────────────┴────────────┴────────────┴──────────────┴──────────────┤
 │                                                                 │
-│   Django · NestJS · Next.js · Nuxt.js · Hono · Flutter          │
-│   TanStack Router · Better Auth · Infisical · Architect         │
+│   Django · NestJS · Next.js · Nuxt.js · Hono · TanStack Router  │
+│   Better Auth · Infisical · Flutter · Architect · Dev Loop      │
+│   Failure Log · Worktree · Onboard · Clarify · React Review     │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -24,7 +25,7 @@
 
 **Convention packs for any AI coding tool.** Install agents, skills, commands, rules, and hooks for 15 AI tools including Claude Code, Cursor, Windsurf, Copilot, and more.
 
-14 packs for Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Infisical, Flutter, system architecture, dev loops, failure memory, worktree management, and engineer onboarding.
+16 packs for Django, NestJS, Next.js, Nuxt.js, Hono, TanStack Router, Better Auth, Infisical, Flutter, system architecture, dev loops, failure memory, worktree management, engineer onboarding, clarify (pre-implementation), and react-review (four-axis review).
 
 ---
 
@@ -71,14 +72,14 @@ ai-kit add django --tools claude-code,cursor
 /plugin install tanstack-router # TanStack SPA (3 agents)
 
 # Or install everything
-/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth infisical flutter architect dev-loop failure-log onboard
+/plugin install django nestjs nextjs nuxtjs hono tanstack-router better-auth infisical flutter architect dev-loop failure-log worktree onboard clarify react-review
 ```
 
 ---
 
 ## Table of Contents
 
-- [14 Available Plugins](#14-available-plugins)
+- [16 Available Plugins](#16-available-plugins)
 - [What You Get](#what-you-get)
 - [Installation Methods](#installation-methods)
 - [Usage Examples](#usage-examples)
@@ -91,7 +92,7 @@ ai-kit add django --tools claude-code,cursor
 
 ---
 
-## 14 Available Plugins
+## 16 Available Plugins
 
 ### 🐍 django (5 agents, 3 commands, 8 skills)
 
@@ -214,9 +215,9 @@ System architecture and diagram-as-code
 
 - `/diagram-create` - Create system diagrams with Eraser.io
 
-### 🔄 dev-loop (2 commands, 1 hook)
+### 🔄 dev-loop (3 commands, 1 skill, 1 hook)
 
-Autonomous development loops for iterative coding
+Autonomous development loops for iterative coding with TDD planning
 
 ```bash
 /plugin install dev-loop
@@ -225,7 +226,12 @@ Autonomous development loops for iterative coding
 **Commands:**
 
 - `/dev-loop` - Start autonomous development loop (Red-Green-Refactor)
+- `/dev-plan` - Generate TDD development plan
 - `/cancel-dev` - Cancel active development loop
+
+**Skills (Auto-Enforcing):**
+
+- `tdd-planner` - Structured TDD phase planning with file tables and tests
 
 **Hooks:**
 
@@ -419,11 +425,64 @@ Intelligent engineer onboarding with personalized guidance
 
 - `onboard-context-provider` - Personalizes explanations based on engineer's background
 
+### 🌳 worktree (1 command, 1 skill)
+
+Git worktree manager for parallel development with automatic environment isolation
+
+```bash
+/plugin install worktree
+```
+
+**Commands:**
+
+- `/wt` - Manage git worktrees for parallel feature development (`/wt create`, `/wt list`, `/wt remove`, `/wt init`, `/wt open`)
+
+**Skills (Auto-Enforcing):**
+
+- `worktree-manager` - Automatic environment file copying (`.worktreeinclude`), branch-scoped DB creation, and Docker compose port isolation
+
+### 💡 clarify (1 agent, 1 command, 3 skills)
+
+Pre-implementation clarification for vague tasks: detects whether a task has one clear flow or several plausible ones, producing a structured execution context before code is written
+
+```bash
+/plugin install clarify
+```
+
+**Agent:**
+
+- `@clarifier` - Clarification specialist for non-slash-command tools (Cursor, Copilot, Codex, Amp, Gemini)
+
+**Command:**
+
+- `/clarify` - Pre-implementation flow detection and disambiguation (single-flow auto-proceed, multi-flow one-question resolution)
+
+**Skills (Auto-Enforcing):**
+
+- `flow-detector` - Analyzes task and codebase to identify candidate end-to-end flows
+- `flow-selector` - Presents candidate flows and asks a single disambiguating question
+- `execution-context-builder` - Synthesizes chosen flow into canonical Markdown and JSON artifacts in `.claude/clarifications/`
+
+### 🔍 react-review (4 commands)
+
+Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Review-only — produces prioritized findings and checklists without altering code
+
+```bash
+/plugin install react-review
+```
+
+**Commands:**
+
+- `/review-arch` - Code quality, TypeScript strictness, component boundaries, and React/Next.js design patterns
+- `/review-perf` - Rendering efficiency, memoization, TanStack Query cache usage, and bundle impact
+- `/review-a11y` - Accessibility (WCAG 2.1 AA), keyboard navigation, focus management, and responsive layout
+- `/review-ui` - Visual polish, typography, spacing rhythm, loading states, and interactive feedback
+
 ---
 
 ## What You Get
 
-### Specialized Agents (29 total)
+### Specialized Agents (30 total)
 
 Each plugin includes agents specialized for that tech stack with deep knowledge of:
 
@@ -433,7 +492,7 @@ Each plugin includes agents specialized for that tech stack with deep knowledge 
 - Security requirements
 - Performance optimization
 
-### Auto-Enforcing Skills (43 total)
+### Auto-Enforcing Skills (46 total)
 
 Skills automatically activate based on context:
 
@@ -444,14 +503,18 @@ Skills automatically activate based on context:
 - **Accessibility Validators** - WCAG 2.1 AA compliance
 - **Performance Optimizers** - Detect N+1, missing indexes
 - **Test Validators** - Quality checks, TDD phase verification
+- **TDD Planning** - Structured TDD phase planning with file tables and tests
 - **Failure Log Manager** - Persistent memory of mistakes to avoid
 - **Edge Framework Patterns** - Hono, Cloudflare bindings, RPC
-- **TanStack Ecosystem** - Router, Query, Form, Table, Virtual
+- **TanStack Ecosystem** - Router, Query, Form, Table, Virtual, Store, DB, AI, Pacer, DevTools
 - **Authentication Patterns** - Better Auth, OAuth, sessions
 - **Secret Management** - Infisical patterns, CI integration, secret hygiene
 - **Mobile Development** - Flutter architecture, Fastlane, store publishing
+- **Pre-Implementation Clarification** - Flow detection, flow selection, execution context generation
+- **Git Worktree Management** - Environment file copying, DB & Docker compose isolation
+- **Engineer Onboarding Context** - Personalized explanations matching engineer's background
 
-### Interactive Commands (29 total)
+### Interactive Commands (39 total)
 
 Slash commands provide step-by-step interactive workflows:
 
@@ -466,24 +529,32 @@ Slash commands provide step-by-step interactive workflows:
 - `/cancel-dev` - Cancel development loop
 - `/failure-add` - Log a mistake to avoid
 - `/failure-list` - View logged failures
-- `/route-create` - Hono/TanStack route creation
+- `/flutter-build` - Build Flutter apps
+- `/flutter-test` - Run Flutter tests
+- `/flutter-deploy` - Deploy to app stores
+- `/fastlane-setup` - Initialize Fastlane
+- `/signing-setup` - Configure code signing
+- `/route-create` - Hono route creation / TanStack route creation
 - `/middleware-create` - Hono middleware creation
 - `/project-init` - Initialize Hono project
 - `/rpc-client` - Generate type-safe RPC client
 - `/query-create` - TanStack Query hooks
 - `/form-create` - TanStack Form components
 - `/table-create` - TanStack Table components
-- `/flutter-build` - Build Flutter apps
-- `/flutter-test` - Run Flutter tests
-- `/flutter-deploy` - Deploy to app stores
-- `/fastlane-setup` - Initialize Fastlane
-- `/signing-setup` - Configure code signing
 - `/auth-setup` - Initialize Better Auth
+- `/auth-provider-add` - Add OAuth providers
+- `/wt` - Git worktree management with env & Docker isolation
+- `/onboard` - Interactive engineer onboarding flow
 - `/infisical-init` - Initialize Infisical workspace
 - `/infisical-auth` - Configure auth method
 - `/infisical-scan` - Scan for exposed secrets
 - `/infisical-env-sync` - Sync secrets to .env
 - `/infisical-ci-setup` - Generate CI/CD pipeline configs
+- `/clarify` - Pre-implementation task clarification & flow disambiguation
+- `/review-arch` - Architecture and React/Next.js pattern branch review
+- `/review-perf` - Rendering efficiency, memoization, and bundle review
+- `/review-a11y` - Accessibility (WCAG 2.1 AA) and responsive review
+- `/review-ui` - UI/UX polish, spacing, typography, and interactive review
 
 ### Multi-Agent Workflows
 
@@ -546,8 +617,10 @@ Requires Node.js 22+.
 # Interactive setup — pick your tools and stack
 ai-kit init
 
-# Add packs
+# Add or install packs
 ai-kit add django
+ai-kit install django          # install a pack
+ai-kit install                 # install all packs configured in .ai-kit.json
 ai-kit add nextjs --skills-only
 
 # Manage packs
@@ -787,7 +860,9 @@ ai-kit/
 │   ├── failure-log/              # 2 commands, 1 skill, 1 hook
 │   ├── worktree/                 # 1 command, 1 skill
 │   ├── onboard/                  # 1 agent, 1 command, 1 skill
-│   └── infisical/                # 1 agent, 5 commands, 3 skills
+│   ├── infisical/                # 1 agent, 5 commands, 3 skills
+│   ├── clarify/                  # 1 agent, 1 command, 3 skills, 1 rule
+│   └── react-review/             # 4 commands
 ├── workflows/                    # Multi-agent orchestration workflows
 └── .github/workflows/            # CI + release (changesets → npm)
 ```

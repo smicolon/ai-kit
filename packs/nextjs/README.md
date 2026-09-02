@@ -1,6 +1,6 @@
 # Next.js Development Standards Plugin
 
-Smicolon company standards for Next.js/React projects.
+Production standards and convention pack for Next.js/React projects.
 
 ## Installation
 

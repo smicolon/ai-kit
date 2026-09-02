@@ -13,221 +13,257 @@ This workflow coordinates multiple specialized agents to deliver a complete feat
 
 ## Workflow Phases
 
+### Phase 0: Task Clarification (Pre-Implementation)
+
+**Agents & Commands Involved:**
+- `/clarify` (Claude Code command)
+- `@clarifier` (Cursor, Copilot, Codex, Amp, Gemini)
+
+**Deliverables:**
+1. Grounded candidate flow analysis
+2. Disambiguated flow selection (if multiple flows plausible)
+3. Structured execution context (`.claude/clarifications/<slug>.local.md` & `.local.json`)
+
+**Actions:**
+```
+1. /clarify "<task description or ticket ID>"
+2. If multi-flow, select preferred flow
+3. Downstream agents/dev loops read .local.json context
+```
+
 ### Phase 1: Architecture & Design
 
 **Agents Involved:**
-- `@django-architect` (Django projects)
-- `@nestjs-architect` (NestJS projects)
-- `@nextjs-architect` (Next.js projects)
-- `@system-architect` (System diagrams)
+- `@django-architect` (Django backends)
+- `@nestjs-architect` (NestJS backends)
+- `@hono-architect` (Hono Edge APIs)
+- `@nextjs-architect` (Next.js web apps)
+- `@nuxtjs-architect` (Nuxt.js web apps)
+- `@tanstack-architect` (TanStack Router React SPAs)
+- `@flutter-architect` (Flutter mobile apps)
+- `@auth-architect` (Authentication systems)
+- `@system-architect` (System diagrams and ERDs via Eraser.io)
 
 **Deliverables:**
 1. Data model design (ERD)
-2. API endpoint specifications
+2. API endpoint specifications and RPC contracts
 3. System architecture diagrams
-4. Security and performance plan
-5. Component/module structure
+4. Security, auth, and performance plan
+5. Component/module/screen structure
 
 **Actions:**
 ```
-1. @system-architect: Create ERD and architecture diagrams
-2. @{framework}-architect: Design data models and API endpoints
-3. Review and validate architecture
-4. Get approval before implementation
+1. @system-architect: Create ERD and architecture diagrams (/diagram-create)
+2. @{framework}-architect: Design data models, API endpoints, and client routes
+3. @auth-architect: Design auth flows, session model, and provider configuration
+4. Review and validate architecture before implementation
 ```
 
-### Phase 2: Backend Implementation
+### Phase 2: Backend & Infrastructure Implementation
 
 **Agents Involved:**
-- `@django-builder` (Django)
+- `@django-builder` / `@django-feature-based` (Django)
 - `@nestjs-builder` (NestJS)
+- `@hono-builder` (Hono Edge APIs)
+- `@infisical-ops` (Secret management and CI/CD env setup)
+- `@auth-architect` (Better Auth setup)
 
 **Deliverables:**
-1. Models/Entities with migrations
-2. Service layer with business logic
-3. API endpoints with validation
+1. Models/Entities with production-safe migrations
+2. Service layer with core business logic
+3. API endpoints with strict validation (DRF, Zod, class-validator)
 4. Permission/guard configuration
+5. Secret management via Infisical (`/infisical-init`, `/infisical-env-sync`)
 
 **Actions:**
 ```
-1. @{framework}-builder: Implement models/entities
-2. @{framework}-builder: Implement service layer
-3. @{framework}-builder: Implement API endpoints
-4. Run migrations and verify database
+1. @{framework}-builder: Implement models/entities and migrations
+2. @{framework}-builder: Implement service layer logic
+3. @{framework}-builder: Implement API endpoints/routes with validation
+4. @infisical-ops: Configure project secrets and env variables
 ```
 
-### Phase 3: Frontend Implementation
+### Phase 3: Frontend & Mobile Implementation
 
 **Agents Involved:**
-- `@nextjs-modular` (Next.js large-scale)
-- `@nuxtjs-architect` (Nuxt.js)
+- `@nextjs-modular` / `@nextjs-architect` (Next.js React apps)
+- `@nuxtjs-architect` (Nuxt.js Vue apps)
+- `@tanstack-builder` (TanStack Router, Query, Form, Table SPAs)
+- `@flutter-builder` (Flutter mobile apps)
+- `@frontend-visual` (Visual QA with Playwright + Figma MCP)
 
 **Deliverables:**
-1. UI components (TypeScript, Tailwind)
-2. Forms with Zod validation
-3. API integration with TanStack Query
-4. Error and loading states
-5. Accessibility compliance
+1. UI components and screens (TypeScript, Tailwind, Dart)
+2. Type-safe forms with Zod / VeeValidate validation
+3. API integration with TanStack Query / Hono RPC client
+4. Error, empty, and loading states
+5. WCAG 2.1 AA accessibility compliance
 
 **Actions:**
 ```
-1. @{framework}-architect: Create components
-2. @{framework}-architect: Implement forms and validation
-3. @{framework}-architect: Integrate with backend API
-4. @frontend-visual: Verify visual design (if applicable)
+1. @{framework}-builder: Create routes/screens and UI components
+2. @{framework}-builder: Implement forms with type-safe validation
+3. @{framework}-builder: Wire data fetching, caching, and state management
+4. @frontend-visual: Verify visual design against Figma / Playwright specs
 ```
 
 ### Phase 4: Testing
 
 **Agents Involved:**
-- `@django-tester` (Django)
-- `@nestjs-tester` (NestJS)
-- `@frontend-tester` (Next.js/Nuxt.js)
+- `@django-tester` (Django pytest)
+- `@nestjs-tester` (NestJS Jest)
+- `@hono-tester` (Hono Bun test / Vitest)
+- `@tanstack-tester` (TanStack SPA testing)
+- `@frontend-tester` (Next.js/Nuxt.js unit, integration, E2E)
+- Flutter testing commands (`/flutter-test`)
 
 **Deliverables:**
-1. Unit tests (90%+ coverage)
-2. Integration tests
-3. API endpoint tests
-4. E2E tests (frontend)
-5. Accessibility tests
+1. Unit tests (90%+ coverage target)
+2. Integration and route tests
+3. API endpoint and RPC contract tests
+4. E2E and widget tests (frontend/mobile)
+5. Accessibility test assertions
 
 **Actions:**
 ```
-1. @{framework}-tester: Generate unit tests
-2. @{framework}-tester: Generate integration tests
-3. @frontend-tester: Generate E2E tests (if frontend)
-4. Run test suite and verify coverage
-5. Fix any failing tests
+1. @{framework}-tester: Generate comprehensive unit and integration tests
+2. @frontend-tester / flutter-test: Generate E2E / widget tests
+3. Run test suites and verify coverage
+4. Verify tests fail in red phase before implementation (if practicing TDD)
 ```
 
-### Phase 5: Code Review & Security
+### Phase 5: Code Review, Security & Four-Axis Review
 
-**Agents Involved:**
-- `@django-reviewer` (Django)
-- Security review agents
+**Agents & Commands Involved:**
+- `@django-reviewer` (Django security and code review)
+- `@hono-reviewer` (Hono Edge security and performance review)
+- React Review commands: `/review-arch`, `/review-perf`, `/review-a11y`, `/review-ui`
+- `/infisical-scan` (Scan for exposed credentials)
+- `@frontend-visual` (Visual QA)
 
 **Deliverables:**
-1. Security audit report
-2. Code quality assessment
-3. Performance review
-4. Recommendations and fixes
+1. Security audit report (permissions, rate limiting, sanitization)
+2. Four-axis review report for React/Next.js (P0/P1/P2 checklist)
+3. Secret scanning report (no credentials committed)
+4. Performance review (N+1 queries, bundle size, cache efficiency)
 
 **Actions:**
 ```
-1. @django-reviewer: Review security and code quality
-2. Address identified issues
-3. Re-run tests after fixes
-4. Final approval
+1. @{framework}-reviewer: Security and convention compliance review
+2. Run React Review commands (/review-arch, /review-perf, /review-a11y, /review-ui)
+3. /infisical-scan: Scan for exposed secrets
+4. Address all P0 critical issues before merge
 ```
 
-### Phase 6: Documentation & Deployment
+### Phase 6: Documentation, Release & Publishing
+
+**Agents & Commands Involved:**
+- `@release-manager` (Flutter App Store / Google Play publishing)
+- `/flutter-deploy` (Fastlane automated deployments)
+- Documentation generators (Swagger, OpenAPI)
 
 **Deliverables:**
-1. API documentation
-2. Component documentation
-3. Deployment guide
-4. Migration guide
+1. API documentation (OpenAPI/Swagger)
+2. Component documentation and stories
+3. Release builds and signing certificates
+4. App Store / Google Play submission metadata and changelog
 
 **Actions:**
 ```
-1. Generate API documentation (Swagger/OpenAPI)
-2. Document components and usage
-3. Create deployment checklist
-4. Create rollback plan
+1. Generate API documentation
+2. @release-manager: Coordinate mobile app submission and review requirements
+3. Run deployment pipeline or store deployment (/flutter-deploy)
 ```
 
-## Usage Example
+## Usage Examples
 
-### Django + Next.js Feature
-
+### 1. Pre-Implementation Clarification + Dev Loop
 ```bash
-# 1. Start with architecture
-@system-architect "Create ERD for user authentication system with social login"
-@django-architect "Design authentication API with JWT and OAuth2"
-@nextjs-architect "Design login/signup UI with social buttons"
+# 1. Clarify vague requirements
+/clarify "Add password reset flow"
+# Output: .claude/clarifications/add-password-reset-flow.local.md & .local.json
 
-# 2. Backend implementation
-@django-builder "Implement authentication models and API endpoints"
-
-# 3. Frontend implementation
-@nextjs-modular "Implement login/signup forms with social auth"
-
-# 4. Testing
-@django-tester "Generate tests for authentication API"
-@frontend-tester "Generate E2E tests for login flow"
-
-# 5. Review
-@django-reviewer "Review authentication implementation for security"
-
-# 6. Visual verification
-@frontend-visual "Verify login page matches design"
+# 2. Start autonomous TDD dev loop with plan
+/dev-plan
+/dev-loop
 ```
 
-### NestJS API Feature
-
+### 2. Django + Next.js Full-Stack Feature
 ```bash
 # 1. Architecture
-@nestjs-architect "Design inventory management module with real-time updates"
+@system-architect "Create ERD for subscription billing system"
+@django-architect "Design billing endpoints and webhook handlers"
+@nextjs-architect "Design billing portal and plan selection UI"
 
 # 2. Implementation
-@nestjs-builder "Implement inventory module with WebSocket support"
+@django-builder "Implement billing models and Stripe webhook endpoint"
+@nextjs-modular "Implement pricing table and subscription checkout form"
 
-# 3. Testing
-@nestjs-tester "Generate comprehensive tests for inventory module"
+# 3. Testing & Review
+@django-tester "Generate tests for Stripe webhook handling"
+@frontend-tester "Generate E2E tests for subscription checkout"
+@django-reviewer "Review billing implementation for security"
+/review-arch
+/review-perf
+```
+
+### 3. Hono Edge API + TanStack Router SPA
+```bash
+# 1. Architecture
+@hono-architect "Design Edge API for workspace analytics on Cloudflare Workers"
+@tanstack-architect "Design analytics dashboard SPA route tree and Query factories"
+
+# 2. Implementation
+@hono-builder "Implement analytics routes with D1 bindings and Zod validation"
+@tanstack-builder "Implement analytics table and chart components with TanStack Table"
+
+# 3. Testing & Review
+@hono-tester "Generate Bun tests for analytics endpoints"
+@tanstack-tester "Generate tests for query factories and route loaders"
+@hono-reviewer "Audit Edge performance and Cloudflare binding usage"
+```
+
+### 4. Flutter Mobile Feature
+```bash
+# 1. Architecture
+@flutter-architect "Design profile editing feature with avatar upload"
+
+# 2. Implementation
+@flutter-builder "Implement profile edit screen, cubit, and repository"
+
+# 3. Testing & Deploy
+/flutter-test
+@release-manager "Prepare App Store submission metadata and review compliance"
+/flutter-deploy
 ```
 
 ## Best Practices
 
 ### Sequential Agent Execution
-- **Architecture first** - Always start with design
-- **Backend before frontend** - API should be stable before UI
-- **Implementation before tests** - Code must exist to test
-- **Tests before review** - Ensure code works before review
+- **Clarify before designing** - Use `/clarify` to resolve ambiguous requirements
+- **Architecture first** - Always design models, contracts, and diagrams before coding
+- **Backend before frontend** - Stabilize API specifications before building UI
+- **Implementation before tests** - Code must exist to test (or follow TDD with `/dev-plan`)
+- **Review before merging** - Always run security and multi-axis reviews
 
 ### Parallel Agent Execution
-- Multiple architects can work in parallel (different concerns)
-- Frontend and backend can be built in parallel (if API is designed)
-- Different test types can run in parallel
+- Multiple architects can work in parallel on system and domain designs
+- Frontend and backend teams can build in parallel once API contracts are locked
+- Unit, E2E, and visual tests can run concurrently
 
 ### Iteration
-- Don't hesitate to go back to previous phases
-- Architecture changes may require implementation updates
-- Test failures may reveal design flaws
-
-### Communication
-- Share architecture documents with all agents
-- Pass API specifications to frontend agents
-- Share test results with reviewers
+- Return to clarification or architecture phases whenever new edge cases emerge
+- Check `.claude/failure-log.local.md` to avoid repeating previously discovered mistakes
 
 ## Success Criteria
 
-- [ ] All architecture diagrams created
-- [ ] All models/entities implement standard fields (UUID, timestamps, soft delete)
-- [ ] All imports follow absolute path conventions
-- [ ] API endpoints have proper validation and permissions
-- [ ] Frontend components are accessible (WCAG 2.1 AA)
+- [ ] Task clarified with execution context generated
+- [ ] Architecture diagrams and API contracts approved
+- [ ] Models/entities implement standard fields (UUID, timestamps, soft delete)
+- [ ] Imports follow absolute path conventions
+- [ ] API endpoints have strict validation and permissions/guards
+- [ ] Frontend components accessible (WCAG 2.1 AA)
 - [ ] Test coverage ≥ 90%
-- [ ] No security vulnerabilities identified
-- [ ] Code passes review
-- [ ] Documentation complete
-
-## Common Pitfalls
-
-1. **Skipping architecture phase** - Leads to rework and inconsistencies
-2. **Not using conventions** - Agents assume Smicolon standards are followed
-3. **Insufficient testing** - 90% coverage is mandatory
-4. **Ignoring security review** - Critical for production code
-5. **Missing documentation** - Future developers need context
-
-## Time Estimates
-
-- **Small Feature** (1-2 models, 3-5 endpoints): 2-4 hours
-- **Medium Feature** (3-5 models, 10-15 endpoints): 4-8 hours
-- **Large Feature** (5+ models, complex logic): 1-3 days
-
-## Notes
-
-- This workflow assumes all Smicolon plugins are installed
-- Adjust agent selection based on your tech stack
-- Use `/plugin install` to add missing agents
-- Consider git worktrees for parallel feature development
+- [ ] No hardcoded secrets (Infisical clean scan)
+- [ ] Code passes security and architecture reviews
+- [ ] Documentation and deployment configs complete

@@ -108,9 +108,9 @@ Examine 3-5 actual source files to detect:
 - State management approach
 - Error handling patterns
 
-**4d. Detect Installed Smicolon Plugins:**
+**4d. Detect Installed Convention Packs:**
 
-Check if the project uses any Smicolon marketplace plugins by looking for plugin-related patterns in code (import aliases like `_users_models`, BaseModel inheritance, etc.).
+Check if the project uses any ai-kit marketplace packs by looking for pack-related patterns in code (import aliases like `_users_models`, BaseModel inheritance, etc.).
 
 ### 5. Knowledge Gap Analysis (automatic)
 

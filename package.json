@@ -1,11 +1,21 @@
 {
   "name": "ai-kit",
   "private": true,
+  "type": "module",
   "workspaces": ["packages/*"],
   "packageManager": "bun@1.2.4",
   "engines": {
     "node": ">=22"
   },
+  "scripts": {
+    "build": "bun run --filter @smicolon/ai-kit build",
+    "dev": "bun run --filter @smicolon/ai-kit dev",
+    "typecheck": "bun run --filter @smicolon/ai-kit typecheck",
+    "test": "bun test packages/cli",
+    "test:packs": "bash tests/test-plugin-structure.sh",
+    "validate": "claude plugin validate ."
+  },
+
   "devDependencies": {
     "@changesets/cli": "^2.29.8"
   }
