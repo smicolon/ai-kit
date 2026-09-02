@@ -1,5 +1,11 @@
 # @smicolon/ai-kit
 
+## 0.6.1
+
+### Patch Changes
+
+- 00a252c: Allow immediate pack selection and installation directly from 'Browse available packs', and maintain an interactive session loop in the root CLI menu.
+
 ## 0.6.0
 
 ### Minor Changes
