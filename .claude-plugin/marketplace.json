@@ -1,6 +1,6 @@
 {
   "name": "smicolon-marketplace",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 agents, 46 skills, four-axis React/Next.js branch review, pre-implementation clarification, Infisical secret management, TanStack SPA, Better Auth, onboarding, and TDD dev loops",
   "metadata": {
     "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 specialized agents, 46 auto-enforcing skills, four-axis React/Next.js branch review (architecture, performance, accessibility, UI), pre-implementation flow clarification, Infisical secret management, intelligent engineer onboarding, TanStack Router SPA development, Better Auth integration, Hono Edge framework, Flutter mobile, git worktree management, persistent failure memory, and TDD-based dev loops for Django, NestJS, Next.js, Nuxt.js, Hono, Flutter, TanStack, and system architecture"
@@ -13,7 +13,7 @@
   "plugins": [
     {
       "name": "dev-loop",
-      "version": "1.2.4",
+      "version": "1.2.5",
       "description": "Autonomous TDD development loops with planning phase and iterative coding",
       "source": "./packs/dev-loop",
       "author": {
@@ -44,7 +44,7 @@
     },
     {
       "name": "django",
-      "version": "2.1.2",
+      "version": "2.1.3",
       "description": "Django standards with 5 agents and 8 auto-enforcing skills",
       "source": "./packs/django",
       "author": {
@@ -91,7 +91,7 @@
     },
     {
       "name": "nestjs",
-      "version": "2.1.2",
+      "version": "2.1.3",
       "description": "NestJS standards with 3 agents and 2 auto-enforcing skills",
       "source": "./packs/nestjs",
       "author": {
@@ -126,7 +126,7 @@
     },
     {
       "name": "nextjs",
-      "version": "2.1.2",
+      "version": "2.1.3",
       "description": "Next.js standards with 4 agents, 3 auto-enforcing skills, and visual QA",
       "source": "./packs/nextjs",
       "author": {
@@ -164,7 +164,7 @@
     },
     {
       "name": "nuxtjs",
-      "version": "2.1.2",
+      "version": "2.1.3",
       "description": "Nuxt.js standards with 3 agents, 3 auto-enforcing skills, and visual QA",
       "source": "./packs/nuxtjs",
       "author": {
@@ -202,7 +202,7 @@
     },
     {
       "name": "architect",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "System architecture and diagram-as-code with Eraser.io integration",
       "source": "./packs/architect",
       "author": {
@@ -260,7 +260,7 @@
     },
     {
       "name": "flutter",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "description": "Flutter development with Fastlane automation, store publishing, and architecture patterns",
       "source": "./packs/flutter",
       "author": {
@@ -344,7 +344,7 @@
     },
     {
       "name": "tanstack-router",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "TanStack Router SPA development with 3 agents, 11 skills for React SPAs using TanStack ecosystem",
       "source": "./packs/tanstack-router",
       "author": {
@@ -395,7 +395,7 @@
     },
     {
       "name": "better-auth",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "description": "Better Auth integration with 1 agent, 2 skills, and MCP server for authentication",
       "source": "./packs/better-auth",
       "author": {
@@ -431,7 +431,7 @@
     },
     {
       "name": "worktree",
-      "version": "0.5.2",
+      "version": "0.5.3",
       "description": "Git worktree manager for parallel development with automatic env copying and dependency installation",
       "source": "./packs/worktree",
       "author": {
@@ -459,7 +459,7 @@
     },
     {
       "name": "onboard",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Intelligent engineer onboarding with personalized guidance based on skills, project analysis, and first task",
       "source": "./packs/onboard",
       "author": {
@@ -565,7 +565,7 @@
     {
       "name": "react-review",
       "version": "0.1.1",
-      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only \u2014 does not modify code.",
+      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only — does not modify code.",
       "source": "./packs/react-review",
       "author": {
         "name": "Smicolon",
