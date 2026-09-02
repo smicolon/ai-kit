@@ -27,51 +27,63 @@ const program = new Command()
     })
   })
   .action(async () => {
-    const projectDir = process.cwd()
-    const config = readConfig(projectDir)
-    const isConfigured = Boolean(config && Object.keys(config.packs).length > 0)
+    while (true) {
+      const projectDir = process.cwd()
+      const config = readConfig(projectDir)
+      const isConfigured = Boolean(config && Object.keys(config.packs).length > 0)
 
-    p.intro(`${pc.bgCyan(pc.black(' ai-kit '))} ${pc.dim(`v${getCliVersion()}`)} ${pc.cyan('— AI Coding Tool Conventions')}`)
+      p.intro(`${pc.bgCyan(pc.black(' ai-kit '))} ${pc.dim(`v${getCliVersion()}`)} ${pc.cyan('— AI Coding Tool Conventions')}`)
 
-    const choices = isConfigured
-      ? [
-          { value: 'add', label: 'Add packs', hint: 'select and install convention packs' },
-          { value: 'install', label: 'Install / Restore packs', hint: 're-install all packs in .ai-kit.json' },
-          { value: 'update', label: 'Update packs', hint: 'check for updates and bump versions' },
-          { value: 'list', label: 'Browse available packs', hint: 'view all 16 packs by category' },
-          { value: 'remove', label: 'Remove an installed pack', hint: 'uninstall a pack and clean up files' },
-          { value: 'reconfigure', label: 'Reconfigure project', hint: 'run full setup wizard' },
-          { value: 'exit', label: 'Exit' },
-        ]
-      : [
-          { value: 'init', label: 'Initialize project (Recommended)', hint: 'detect AI tools & stack, setup conventions' },
-          { value: 'add', label: 'Add packs', hint: 'choose from 16 available convention packs' },
-          { value: 'list', label: 'Browse available packs', hint: 'view frameworks, workflows, and tools' },
-          { value: 'exit', label: 'Exit' },
-        ]
+      const choices = isConfigured
+        ? [
+            { value: 'add', label: 'Add packs', hint: 'select and install convention packs' },
+            { value: 'list', label: 'Browse available packs', hint: 'view all 16 packs by category and install' },
+            { value: 'install', label: 'Install / Restore packs', hint: 're-install all packs in .ai-kit.json' },
+            { value: 'update', label: 'Update packs', hint: 'check for updates and bump versions' },
+            { value: 'remove', label: 'Remove an installed pack', hint: 'uninstall a pack and clean up files' },
+            { value: 'reconfigure', label: 'Reconfigure project', hint: 'run full setup wizard' },
+            { value: 'exit', label: 'Exit' },
+          ]
+        : [
+            { value: 'init', label: 'Initialize project (Recommended)', hint: 'detect AI tools & stack, setup conventions' },
+            { value: 'add', label: 'Add packs', hint: 'choose from 16 available convention packs' },
+            { value: 'list', label: 'Browse available packs', hint: 'view frameworks, workflows, and tools' },
+            { value: 'exit', label: 'Exit' },
+          ]
 
-    const action = await p.select({
-      message: 'What would you like to do?',
-      options: choices,
-    })
+      const action = await p.select({
+        message: 'What would you like to do?',
+        options: choices,
+      })
 
-    if (p.isCancel(action) || action === 'exit') {
-      p.outro(pc.dim('Goodbye!'))
-      return
-    }
+      if (p.isCancel(action) || action === 'exit') {
+        p.outro(pc.dim('Goodbye!'))
+        return
+      }
 
-    if (action === 'add') {
-      await runAdd()
-    } else if (action === 'init' || action === 'reconfigure') {
-      await runInit()
-    } else if (action === 'install') {
-      await runInstall()
-    } else if (action === 'update') {
-      await runUpdate()
-    } else if (action === 'list') {
-      await runList()
-    } else if (action === 'remove') {
-      await runRemove()
+      if (action === 'add') {
+        await runAdd()
+      } else if (action === 'init' || action === 'reconfigure') {
+        await runInit()
+      } else if (action === 'install') {
+        await runInstall()
+      } else if (action === 'update') {
+        await runUpdate()
+      } else if (action === 'list') {
+        await runList({ interactive: true })
+      } else if (action === 'remove') {
+        await runRemove()
+      }
+
+      const next = await p.confirm({
+        message: 'Would you like to do anything else?',
+        initialValue: false,
+      })
+
+      if (!next || p.isCancel(next)) {
+        p.outro(pc.dim('Goodbye!'))
+        return
+      }
     }
   })
 

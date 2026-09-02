@@ -1,14 +1,16 @@
 import { Command } from 'commander'
 import pc from 'picocolors'
+import * as p from '@clack/prompts'
 import { discoverPacks } from '../discovery.js'
 import { readConfig } from '../config.js'
 import { getRegistryOptions } from '../global-opts.js'
+import { runAdd } from './add.js'
 
 export const listCommand = new Command('list')
   .description('List available or installed packs')
   .option('--installed', 'Show only installed packs')
   .option('--cwd <dir>', 'Project directory')
-export async function runList(opts: { installed?: boolean; cwd?: string } = {}) {
+export async function runList(opts: { installed?: boolean; cwd?: string; interactive?: boolean } = {}) {
   const projectDir = opts.cwd ? opts.cwd : process.cwd()
 
     if (opts.installed) {
@@ -93,7 +95,20 @@ export async function runList(opts: { installed?: boolean; cwd?: string } = {}) 
       console.log('')
     }
 
-    console.log(pc.dim(`Use ${pc.cyan('ai-kit add <pack>')} to install, or ${pc.cyan('ai-kit init')} for interactive setup.`))
+    if (opts.interactive) {
+      const next = await p.select({
+        message: 'What would you like to do next?',
+        options: [
+          { value: 'install', label: 'Select and install packs now', hint: 'open interactive picker' },
+          { value: 'back', label: 'Back to main menu' },
+        ],
+      })
+      if (next === 'install') {
+        await runAdd(undefined, { cwd: opts.cwd })
+      }
+    } else {
+      console.log(pc.dim(`Use ${pc.cyan('ai-kit add <pack>')} to install, or ${pc.cyan('ai-kit init')} for interactive setup.`))
+    }
 }
 
 listCommand.action(runList)
