@@ -8,8 +8,8 @@ export const listCommand = new Command('list')
   .description('List available or installed packs')
   .option('--installed', 'Show only installed packs')
   .option('--cwd <dir>', 'Project directory')
-  .action(async (opts: { installed?: boolean; cwd?: string }) => {
-    const projectDir = opts.cwd ? opts.cwd : process.cwd()
+export async function runList(opts: { installed?: boolean; cwd?: string } = {}) {
+  const projectDir = opts.cwd ? opts.cwd : process.cwd()
 
     if (opts.installed) {
       const config = readConfig(projectDir)
@@ -94,4 +94,6 @@ export const listCommand = new Command('list')
     }
 
     console.log(pc.dim(`Use ${pc.cyan('ai-kit add <pack>')} to install, or ${pc.cyan('ai-kit init')} for interactive setup.`))
-  })
+}
+
+listCommand.action(runList)

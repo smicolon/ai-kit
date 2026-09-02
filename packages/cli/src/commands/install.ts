@@ -12,8 +12,8 @@ export const installCommand = new Command('install')
   .alias('i')
   .description('Install all packs declared in .ai-kit.json')
   .option('--cwd <dir>', 'Project directory')
-  .action(async (opts: { cwd?: string }) => {
-    const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
+export async function runInstall(opts: { cwd?: string } = {}) {
+  const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
     const config = readConfig(projectDir)
 
     if (!config || Object.keys(config.packs).length === 0) {
@@ -60,4 +60,6 @@ export const installCommand = new Command('install')
     updateGitignore(projectDir)
 
     console.log(pc.green(`\nDone! Successfully installed ${installedCount} pack(s).`))
-  })
+}
+
+installCommand.action(runInstall)

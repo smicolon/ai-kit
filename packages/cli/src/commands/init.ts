@@ -18,11 +18,11 @@ export const initCommand = new Command('init')
   .option('--tools <tools>', 'Comma-separated tool IDs (e.g. cursor,claude-code)')
   .option('-y, --yes', 'Non-interactive mode using detected defaults')
   .option('--cwd <dir>', 'Project directory (for monorepo sub-packages)')
-  .action(async (opts: { tools?: string; yes?: boolean; cwd?: string }) => {
-    p.intro(`${pc.bgCyan(pc.black(' ai-kit '))} ${pc.dim(`v${getCliVersion()}`)} ${pc.cyan('— AI Coding Tool Conventions')}`)
+export async function runInit(opts: { tools?: string; yes?: boolean; cwd?: string } = {}) {
+  p.intro(`${pc.bgCyan(pc.black(' ai-kit '))} ${pc.dim(`v${getCliVersion()}`)} ${pc.cyan('— AI Coding Tool Conventions')}`)
 
-    const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
-    const existing = readConfig(projectDir)
+  const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
+  const existing = readConfig(projectDir)
 
     if (existing) {
       const action = await p.select({
@@ -263,4 +263,6 @@ export const initCommand = new Command('init')
     }
 
     p.outro(pc.dim('Run ai-kit add <pack> to add more packs anytime.'))
-  })
+}
+
+initCommand.action(runInit)

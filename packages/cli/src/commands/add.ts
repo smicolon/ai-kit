@@ -73,9 +73,9 @@ export const addCommand = new Command('add')
   .option('--hooks-only', 'Only install hooks')
   .option('--tools <tools>', 'Comma-separated tool IDs (overrides config)')
   .option('--cwd <dir>', 'Project directory (for monorepo sub-packages)')
-  .action(async (packName: string | undefined, opts: Record<string, unknown>) => {
-    const projectDir = opts.cwd ? path.resolve(opts.cwd as string) : process.cwd()
-    const registryOpts = getRegistryOptions()
+export async function runAdd(packName?: string, opts: Record<string, unknown> = {}) {
+  const projectDir = opts.cwd ? path.resolve(opts.cwd as string) : process.cwd()
+  const registryOpts = getRegistryOptions()
 
     // If no pack name specified on CLI, open interactive picker
     let packsToInstall: Pack[] = []
@@ -163,4 +163,6 @@ export const addCommand = new Command('add')
     writeConfig(projectDir, config)
     updateGitignore(projectDir)
     console.log(pc.dim(`  → ${tools.map(t => t).join(', ')}`))
-  })
+}
+
+addCommand.action(runAdd)

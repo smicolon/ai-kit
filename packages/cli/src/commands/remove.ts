@@ -10,9 +10,9 @@ export const removeCommand = new Command('remove')
   .description('Remove a pack from your project')
   .argument('[pack]', 'Pack name to remove — omit for interactive picker')
   .option('--cwd <dir>', 'Project directory')
-  .action(async (packName: string | undefined, opts: { cwd?: string }) => {
-    const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
-    let config = readConfig(projectDir)
+export async function runRemove(packName?: string, opts: { cwd?: string } = {}) {
+  const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
+  let config = readConfig(projectDir)
 
     if (!packName) {
       if (!config || Object.keys(config.packs).length === 0) {
@@ -101,4 +101,6 @@ export const removeCommand = new Command('remove')
       writeConfig(projectDir, removeFromConfig(config!, packName))
       console.log(pc.dim('Config updated.'))
     }
-  })
+}
+
+removeCommand.action(runRemove)

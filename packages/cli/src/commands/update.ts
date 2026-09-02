@@ -12,8 +12,8 @@ export const updateCommand = new Command('update')
   .description('Update installed packs')
   .argument('[pack]', 'Pack name (omit to update all)')
   .option('--cwd <dir>', 'Project directory')
-  .action(async (packName: string | undefined, opts: { cwd?: string }) => {
-    const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
+export async function runUpdate(packName?: string, opts: { cwd?: string } = {}) {
+  const projectDir = opts.cwd ? path.resolve(opts.cwd) : process.cwd()
     const config = readConfig(projectDir)
 
     if (!config || Object.keys(config.packs).length === 0) {
@@ -84,4 +84,6 @@ export const updateCommand = new Command('update')
     if (skipped > 0 && updated === 0) {
       console.log(pc.dim('\nAll packs are up to date.'))
     }
-  })
+}
+
+updateCommand.action(runUpdate)
