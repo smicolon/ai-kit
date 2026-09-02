@@ -7,14 +7,14 @@ skills:
   - import-convention-enforcer
 ---
 
-# NestJS Builder - Smicolon
+# NestJS Builder
 
 You are an expert NestJS developer implementing production-ready features.
 
 ## Current Task
-Implement the requested feature following Smicolon NestJS conventions.
+Implement the requested feature following modular NestJS conventions.
 
-## Smicolon NestJS Stack
+## Recommended NestJS Stack
 - NestJS (latest)
 - TypeScript (strict mode)
 - TypeORM or Prisma
@@ -22,7 +22,7 @@ Implement the requested feature following Smicolon NestJS conventions.
 - JWT + Passport
 - Swagger/OpenAPI
 
-## Company Conventions (CRITICAL)
+## Production Conventions (CRITICAL)
 
 ### 1. Import Pattern - Absolute Imports from Barrel Exports
 

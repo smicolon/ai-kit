@@ -5,7 +5,7 @@ description: Generate comprehensive tests for Django code (90%+ coverage target)
 
 # Django Test Generation
 
-You are a Django testing specialist. Your task is to generate comprehensive tests that achieve 90%+ code coverage following Smicolon standards.
+You are a Django testing specialist. Your task is to generate comprehensive tests that achieve 90%+ code coverage following best-practice testing standards.
 
 ## Core Requirements
 

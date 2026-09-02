@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import os from 'node:os'
 import type { ToolId } from './types.js'
 
 export interface DetectionResult {
@@ -19,33 +20,84 @@ export function detectProject(projectDir: string): DetectionResult {
 
   const exists = (relPath: string) => fs.existsSync(path.join(projectDir, relPath))
 
-  // Tool detection
-  if (exists('.claude') || exists('.claude-plugin') || exists('CLAUDE.md')) {
-    tools.push('claude-code')
+  // 1. Runtime execution environment detection (inside agent terminal)
+  if (process.env.CLAUDE_CODE || process.env.CLAUDE_PLUGIN_ROOT) {
+    if (!tools.includes('claude-code')) tools.push('claude-code')
   }
-  if (exists('.cursor') || exists('.cursorrules')) {
-    tools.push('cursor')
+  if (process.env.CURSOR_AGENT || process.env.CURSOR_TRACE_ID) {
+    if (!tools.includes('cursor')) tools.push('cursor')
+  }
+  if (process.env.CODEX_SESSION || process.env.CODEX_HOME) {
+    if (!tools.includes('codex')) tools.push('codex')
+  }
+  if (process.env.ANTIGRAVITY_AGENT || process.env.GEMINI_CLI) {
+    if (!tools.includes('antigravity')) tools.push('antigravity')
+  }
+  if (process.env.WINDSURF_AGENT) {
+    if (!tools.includes('windsurf')) tools.push('windsurf')
+  }
+  if (process.env.DEVIN_AGENT) {
+    if (!tools.includes('devin')) tools.push('devin')
+  }
+
+  // 2. Project workspace dotfiles and directory detection
+  if (exists('.claude') || exists('.claude-plugin') || exists('CLAUDE.md')) {
+    if (!tools.includes('claude-code')) tools.push('claude-code')
+  }
+  if (exists('.cursor') || exists('.cursorrules') || exists('.cursor/rules')) {
+    if (!tools.includes('cursor')) tools.push('cursor')
   }
   if (exists('.windsurf') || exists('.windsurfrules')) {
-    tools.push('windsurf')
+    if (!tools.includes('windsurf')) tools.push('windsurf')
   }
-  if (exists('.github/copilot-instructions.md') || exists('.github/skills')) {
-    tools.push('copilot')
+  if (exists('.github/copilot-instructions.md') || exists('.github/skills') || exists('.github/prompts')) {
+    if (!tools.includes('copilot')) tools.push('copilot')
   }
   if (exists('.codex')) {
-    tools.push('codex')
+    if (!tools.includes('codex')) tools.push('codex')
   }
   if (exists('.cline') || exists('.clinerules')) {
-    tools.push('cline')
+    if (!tools.includes('cline')) tools.push('cline')
   }
   if (exists('.continue')) {
-    tools.push('continue')
+    if (!tools.includes('continue')) tools.push('continue')
   }
   if (exists('.gemini') || exists('AGENTS.md')) {
-    tools.push('antigravity')
+    if (!tools.includes('antigravity')) tools.push('antigravity')
   }
-  if (exists('.roo-code')) {
-    tools.push('roo-code')
+  if (exists('.roo-code') || exists('.roo') || exists('.roomodes')) {
+    if (!tools.includes('roo-code')) tools.push('roo-code')
+  }
+  if (exists('.opencode')) {
+    if (!tools.includes('opencode')) tools.push('opencode')
+  }
+  if (exists('.goose')) {
+    if (!tools.includes('goose')) tools.push('goose')
+  }
+  if (exists('.zed')) {
+    if (!tools.includes('zed')) tools.push('zed')
+  }
+  if (exists('.trae')) {
+    if (!tools.includes('trae')) tools.push('trae')
+  }
+  if (exists('.agents/skills')) {
+    if (!tools.includes('universal')) tools.push('universal')
+  }
+
+  // 3. User machine detection fallback (home directory)
+  if (tools.length === 0) {
+    const home = os.homedir()
+    const homeExists = (p: string) => fs.existsSync(path.join(home, p))
+    if (homeExists('.claude')) tools.push('claude-code')
+    if (homeExists('.cursor')) tools.push('cursor')
+    if (homeExists('.codeium/windsurf')) tools.push('windsurf')
+    if (homeExists('.gemini/antigravity') || homeExists('.gemini/antigravity-cli')) tools.push('antigravity')
+    if (homeExists('.codex')) tools.push('codex')
+    if (homeExists('.cline')) tools.push('cline')
+    if (homeExists('.roo') || homeExists('.roo-code')) tools.push('roo-code')
+    if (homeExists('.config/opencode') || homeExists('.opencode')) tools.push('opencode')
+    if (homeExists('.goose')) tools.push('goose')
+    if (homeExists('.trae')) tools.push('trae')
   }
 
   // Pack detection

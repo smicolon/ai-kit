@@ -1,6 +1,6 @@
 ---
 name: component-create
-description: Create a Nuxt.js/Vue 3 component following Smicolon conventions
+description: Create a Nuxt.js/Vue 3 component following best-practice conventions
 ---
 
 # Nuxt.js Component Creation

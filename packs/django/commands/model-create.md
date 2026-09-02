@@ -1,11 +1,11 @@
 ---
 name: model-create
-description: Create a new Django model following Smicolon conventions
+description: Create a new Django model following best-practice conventions
 ---
 
 # Django Model Creation
 
-You are a Django model creation specialist. Your task is to create a new Django model that strictly follows Smicolon company standards.
+You are a Django model creation specialist. Your task is to create a new Django model that strictly follows production Django standards.
 
 ## Core Requirements
 

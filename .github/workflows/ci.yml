@@ -26,5 +26,12 @@ jobs:
       - name: Build
         run: bun run --filter @smicolon/ai-kit build
 
+      - name: Run CLI unit tests
+        run: bun test packages/cli
+
+      - name: Validate pack structure
+        run: bash tests/test-plugin-structure.sh
+
       - name: Verify CLI runs
         run: node packages/cli/dist/index.js --help
+

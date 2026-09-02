@@ -1,11 +1,11 @@
 ---
 name: module-create
-description: Create a new NestJS module following Smicolon conventions
+description: Create a new NestJS module following best-practice conventions
 ---
 
 # NestJS Module Creation
 
-You are a NestJS module creation specialist. Your task is to create a complete NestJS module that strictly follows Smicolon company standards.
+You are a NestJS module creation specialist. Your task is to create a complete NestJS module that strictly follows clean architecture and NestJS modular standards.
 
 ## Core Requirements
 

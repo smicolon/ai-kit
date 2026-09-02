@@ -139,6 +139,75 @@ export const TOOL_REGISTRY: Record<ToolId, ToolConfig> = {
       rules: '.amazon-q/rules',
     },
   },
+  opencode: {
+    label: 'OpenCode',
+    hint: 'skills, rules',
+    skillsDir: '.opencode/skills',
+    components: {
+      skills: '.opencode/skills',
+      rules: '.opencode/rules',
+    },
+  },
+  goose: {
+    label: 'Goose',
+    hint: 'skills',
+    skillsDir: '.goose/skills',
+    components: {
+      skills: '.goose/skills',
+    },
+  },
+  zed: {
+    label: 'Zed',
+    hint: 'skills, rules',
+    skillsDir: '.zed/skills',
+    components: {
+      skills: '.zed/skills',
+      rules: '.zed/rules',
+    },
+  },
+  trae: {
+    label: 'Trae',
+    hint: 'skills, rules',
+    skillsDir: '.trae/skills',
+    components: {
+      skills: '.trae/skills',
+      rules: '.trae/rules',
+    },
+  },
+  devin: {
+    label: 'Devin',
+    hint: 'skills, rules',
+    skillsDir: '.agents/skills',
+    components: {
+      skills: '.agents/skills',
+      rules: '.agents/rules',
+    },
+  },
+  openhands: {
+    label: 'OpenHands',
+    hint: 'skills',
+    skillsDir: '.openhands/skills',
+    components: {
+      skills: '.openhands/skills',
+    },
+  },
+  replit: {
+    label: 'Replit Agent',
+    hint: 'skills',
+    skillsDir: '.replit/skills',
+    components: {
+      skills: '.replit/skills',
+    },
+  },
+  universal: {
+    label: 'Universal (.agents/skills)',
+    hint: 'open agent skills standard',
+    skillsDir: '.agents/skills',
+    components: {
+      skills: '.agents/skills',
+      rules: '.agents/rules',
+    },
+  },
 }
 
 export const TOOL_IDS = Object.keys(TOOL_REGISTRY) as ToolId[]

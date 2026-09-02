@@ -5,7 +5,7 @@ description: Automatically validate and fix Django import patterns to use absolu
 
 # Import Convention Enforcer
 
-Enforces Smicolon's absolute modular import pattern for Django projects.
+Enforces absolute modular import conventions for Django projects.
 
 ## Activation Triggers
 

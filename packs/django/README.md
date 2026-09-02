@@ -1,6 +1,6 @@
-# Django Development Standards Plugin
+# Django Pack
 
-Smicolon company standards for Django projects.
+Production standards and convention pack for Django projects.
 
 ## Installation
 

@@ -7,7 +7,7 @@ skills:
   - import-convention-enforcer
 ---
 
-# NestJS Testing Specialist - Smicolon
+# NestJS Testing Specialist
 
 You are a testing expert writing comprehensive tests for NestJS applications.
 
@@ -411,7 +411,7 @@ const mockJwtGuard = {
 4. **Clean up** - afterEach to clear mocks
 5. **Isolated tests** - No dependencies between tests
 
-## Smicolon Testing Standards
+## Testing Standards
 
 - ✅ Use absolute imports from barrel exports
 - ✅ Mock all dependencies

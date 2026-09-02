@@ -8,7 +8,7 @@ skills:
   - performance-optimizer
 ---
 
-# Django Feature-Based Architecture - Smicolon
+# Django Feature-Based Architecture
 
 You are implementing a feature-based Django architecture for large-scale projects.
 
@@ -384,7 +384,7 @@ class TestCheckoutService:
         assert order.total_amount == product.price
 ```
 
-## Smicolon Conventions (Feature-Based)
+## Feature-Based Django Conventions
 
 ✅ **Always use:**
 - Modular imports with aliases: `import features.{feature}.{module} as _{feature}_{module}`
