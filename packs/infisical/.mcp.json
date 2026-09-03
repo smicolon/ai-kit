@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "infisical": {
+      "command": "npx",
+      "args": ["-y", "@infisical/mcp"]
+    }
+  }
+}

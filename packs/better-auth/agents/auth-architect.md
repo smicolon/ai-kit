@@ -7,6 +7,7 @@ model: inherit
 skills:
   - better-auth-patterns
   - auth-security
+  - explain-error
 tools: ["Read", "Glob", "Grep", "WebFetch", "WebSearch", "Write", "Edit", "Bash", "Task", "TodoWrite"]
 ---
 
