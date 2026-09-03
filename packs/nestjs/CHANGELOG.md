@@ -2,11 +2,12 @@
 
 All notable changes to the smi-nestjs plugin will be documented in this file.
 
-## [Unreleased]
+## [2.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-nestjs` to `nestjs` as part of ai-kit migration
-- Moved from `plugins/smi-nestjs/` to `packs/nestjs/`
+### Added
+- `nestjs-security-validator` skill: ValidationPipe whitelist, @nestjs/throttler v5+ rate limits, Helmet, and CORS
+- `nestjs-testing-patterns` skill: isolated unit and integration testing via `Test.createTestingModule()`
+- Circular dependency prevention and `forwardRef()` resolution in `barrel-export-manager`
 
 ## [2.1.0] - 2025-01-02
 

@@ -358,6 +358,35 @@ export class OrdersService {
 }
 ```
 
+## Circular Dependency Prevention
+
+When two services or modules re-export and inject each other, JavaScript runtime evaluation order may cause one dependency to resolve to `undefined` at runtime:
+
+### Diagnostic Warning:
+`Nest can't resolve dependencies of the XService (?, YService). Please make sure that the argument at index [0] is available in the current context.`
+
+### Resolution:
+1. **Never** import a service from another module's barrel export if that module imports back from your module's barrel.
+2. If two services must reference each other, use NestJS `forwardRef()` in both module definitions and constructor injections:
+```typescript
+// users.service.ts
+@Injectable()
+export class UsersService {
+  constructor(
+    @Inject(forwardRef(() => OrdersService))
+    private ordersService: OrdersService,
+  ) {}
+}
+
+// users.module.ts
+@Module({
+  imports: [forwardRef(() => OrdersModule)],
+  providers: [UsersService],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
+
 ## Success Criteria
 
 ✅ Every module directory has barrel exports

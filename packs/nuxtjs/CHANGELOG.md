@@ -2,11 +2,11 @@
 
 All notable changes to the smi-nuxtjs plugin will be documented in this file.
 
-## [Unreleased]
+## [2.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-nuxtjs` to `nuxtjs` as part of ai-kit migration
-- Moved from `plugins/smi-nuxtjs/` to `packs/nuxtjs/`
+### Added
+- Nuxt 4 `app/` directory layout guidelines
+- Refined auto-import enforcement to avoid redundant imports for Vue/Nuxt composables
 
 ## [2.1.0] - 2025-01-02
 

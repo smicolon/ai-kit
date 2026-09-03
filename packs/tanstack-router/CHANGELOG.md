@@ -2,11 +2,10 @@
 
 All notable changes to the smi-tanstack-router plugin will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-tanstack-router` to `tanstack-router` as part of ai-kit migration
-- Moved from `plugins/smi-tanstack-router/` to `packs/tanstack-router/`
+### Added
+- `start-patterns` skill for TanStack Start full-stack framework with server functions (`createServerFn`), SSR streaming, and middleware
 
 ## [0.1.0] - 2025-01-02
 

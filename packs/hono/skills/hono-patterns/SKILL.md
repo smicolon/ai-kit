@@ -297,6 +297,86 @@ const kv = c.env.KV
 const bucket = c.env.BUCKET
 ```
 
+### Request Testing via CLI and `app.request`
+
+Test endpoints directly without launching a background server:
+
+```typescript
+// Fast in-memory request testing (Bun test / Vitest)
+import { describe, it, expect } from 'bun:test'
+import app from '../src/index'
+
+describe('User API', () => {
+  it('GET /api/users returns 200', async () => {
+    const res = await app.request('/api/users')
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ users: [] })
+  })
+
+  it('POST /api/users validates payload', async () => {
+    const res = await app.request('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'test@example.com' }),
+    })
+    expect(res.status).toBe(201)
+  })
+})
+```
+
+Using the Hono CLI:
+```bash
+# Test endpoints directly from terminal
+npx hono request http://localhost:8787/api/users
+```
+
+### OpenAPI & Swagger via `@hono/zod-openapi`
+
+```typescript
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
+import { swaggerUI } from '@hono/swagger-ui'
+
+const app = new OpenAPIHono()
+
+const getUserRoute = createRoute({
+  method: 'get',
+  path: '/users/{id}',
+  request: {
+    params: z.object({ id: z.string() }),
+  },
+  responses: {
+    200: {
+      content: { 'application/json': { schema: UserSchema } },
+      description: 'Retrieve user by ID',
+    },
+  },
+})
+
+app.openapi(getUserRoute, (c) => {
+  const { id } = c.req.valid('param')
+  return c.json({ id, name: 'John Doe' }, 200)
+})
+
+// Auto-generated Swagger UI docs
+app.doc('/doc', { openapi: '3.1.0', info: { title: 'API', version: 'v1' } })
+app.get('/ui', swaggerUI({ url: '/doc' }))
+```
+
+### AI Streaming & Server-Sent Events (SSE)
+
+```typescript
+import { streamText, streamSSE } from 'hono/streaming'
+
+app.get('/api/chat', (c) => {
+  return streamText(c, async (stream) => {
+    for (const chunk of ['Hello', ' from', ' edge!']) {
+      await stream.write(chunk)
+      await stream.sleep(100)
+    }
+  })
+})
+```
+
 ## Best Practices
 
 1. **Always type your app**: `new Hono<Env>()`
