@@ -416,6 +416,76 @@ export const Route = createFileRoute('/_guest')({
 })
 ```
 
+## Official Plugins
+
+Better Auth includes first-class plugins for enterprise and security features:
+
+### 1. Two-Factor Authentication (2FA / TOTP)
+```typescript
+// lib/auth.ts
+import { betterAuth } from 'better-auth'
+import { twoFactor } from 'better-auth/plugins'
+
+export const auth = betterAuth({
+  // ... database
+  plugins: [
+    twoFactor({
+      issuer: 'MyApp',
+    }),
+  ],
+})
+
+// Client setup: import { twoFactorClient } from 'better-auth/client/plugins'
+// createAuthClient({ plugins: [twoFactorClient()] })
+```
+
+### 2. Passkeys / WebAuthn
+```typescript
+import { betterAuth } from 'better-auth'
+import { passkey } from 'better-auth/plugins'
+
+export const auth = betterAuth({
+  plugins: [
+    passkey({
+      rpID: process.env.RP_ID || 'localhost',
+      rpName: 'MyApp',
+      origin: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+    }),
+  ],
+})
+```
+
+### 3. Organizations / Multi-Tenancy (B2B SaaS)
+```typescript
+import { betterAuth } from 'better-auth'
+import { organization } from 'better-auth/plugins'
+
+export const auth = betterAuth({
+  plugins: [
+    organization({
+      allowUserToCreateOrganization: true,
+      roles: ['owner', 'admin', 'member'],
+    }),
+  ],
+})
+```
+
+### 4. API Keys & Admin Panel
+```typescript
+import { betterAuth } from 'better-auth'
+import { apiKey, admin } from 'better-auth/plugins'
+
+export const auth = betterAuth({
+  plugins: [
+    apiKey(),
+    admin({
+      defaultRole: 'user',
+      adminRole: 'admin',
+    }),
+  ],
+})
+```
+
 ## Conventions
 
 1. **Server config in lib/** - Keep auth config at `lib/auth.ts`

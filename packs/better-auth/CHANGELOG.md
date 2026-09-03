@@ -2,11 +2,14 @@
 
 All notable changes to the smi-better-auth plugin will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-03
+
+### Added
+- `explain-error` skill for diagnosing and resolving Better Auth runtime and configuration error codes
+- Modern official plugin patterns for 2FA, Passkeys, Organizations (multi-tenancy), Admin panel, and API keys in `better-auth-patterns`
 
 ### Changed
-- Renamed from `smi-better-auth` to `better-auth` as part of ai-kit migration
-- Moved from `plugins/smi-better-auth/` to `packs/better-auth/`
+- Migrated MCP configuration to the official `@better-auth/cli mcp` server
 
 ## [0.1.0] - 2025-01-02
 

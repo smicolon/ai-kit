@@ -222,6 +222,29 @@ infisical secrets set DATABASE_URL=postgres://staging-db/myapp --env=staging
 infisical secrets set DATABASE_URL=postgres://prod-db/myapp --env=production
 ```
 
+## AI Agent Credential Security & Agent Vault
+
+When AI agents, MCP servers, or automated tools interact with applications, prevent exposing raw production secrets to the LLM context:
+
+### 1. Infisical Agent Vault (Credential Proxy)
+- **Principle**: The AI agent does not directly hold sensitive API keys. Instead, outgoing tool requests pass through Infisical Agent Vault as an egress proxy.
+- **Workflow**:
+  - The agent is given a scoped placeholder or local proxy endpoint.
+  - Agent Vault injects the actual authenticated headers/secrets at egress before reaching downstream APIs.
+  - Zero sensitive credentials appear in LLM conversation logs, system prompts, or tool inputs/outputs.
+
+### 2. Scoped Machine Identities for AI Workflows
+- Always create a dedicated machine identity for automated agent execution with read-only permissions scoped strictly to `/dev` or `/testing`:
+  ```bash
+  infisical login --method=universal-auth \
+    --client-id=$INFISICAL_AGENT_CLIENT_ID \
+    --client-secret=$INFISICAL_AGENT_CLIENT_SECRET
+  ```
+- Never execute AI coding tools with human admin tokens.
+
+### 3. Agent Sentinel Audit
+- Use Infisical Agent Sentinel to enforce access policies, rate limits, and audit logs for MCP tool calls requesting secrets.
+
 ## Anti-Patterns
 
 ### Never Commit .env Files

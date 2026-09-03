@@ -395,8 +395,8 @@
     },
     {
       "name": "better-auth",
-      "version": "0.1.3",
-      "description": "Better Auth integration with 1 agent, 2 skills, and MCP server for authentication",
+      "version": "0.2.0",
+      "description": "Better Auth integration with 1 agent, 3 skills, and official MCP server for authentication",
       "source": "./packs/better-auth",
       "author": {
         "name": "Smicolon",
@@ -425,7 +425,8 @@
       ],
       "skills": [
         "./skills/better-auth-patterns",
-        "./skills/auth-security"
+        "./skills/auth-security",
+        "./skills/explain-error"
       ],
       "mcpServers": "./.mcp.json"
     },
@@ -490,8 +491,8 @@
     },
     {
       "name": "infisical",
-      "version": "0.1.2",
-      "description": "Infisical secret management with 1 agent, 3 auto-enforcing skills, and CI/CD integration for cloud and self-hosted instances",
+      "version": "0.2.0",
+      "description": "Infisical secret management with 1 agent, 3 auto-enforcing skills, official MCP server, and CI/CD integration for cloud and self-hosted instances",
       "source": "./packs/infisical",
       "author": {
         "name": "Smicolon",
@@ -526,7 +527,8 @@
         "./skills/infisical-patterns",
         "./skills/infisical-ci-integration",
         "./skills/secret-hygiene"
-      ]
+      ],
+      "mcpServers": "./.mcp.json"
     },
     {
       "name": "clarify",

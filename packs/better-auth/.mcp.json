@@ -2,13 +2,7 @@
   "mcpServers": {
     "better-auth": {
       "command": "npx",
-      "args": ["-y", "@nahmanmate/better-auth-mcp-server"],
-      "env": {
-        "BETTER_AUTH_PROJECT_ID": "${BETTER_AUTH_PROJECT_ID}",
-        "BETTER_AUTH_API_KEY": "${BETTER_AUTH_API_KEY}",
-        "BETTER_AUTH_ENV": "${BETTER_AUTH_ENV:-development}",
-        "LOG_LEVEL": "${LOG_LEVEL:-info}"
-      }
+      "args": ["-y", "@better-auth/cli", "mcp"]
     }
   }
 }
