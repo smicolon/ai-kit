@@ -260,8 +260,8 @@
     },
     {
       "name": "flutter",
-      "version": "0.1.3",
-      "description": "Flutter development with Fastlane automation, store publishing, and architecture patterns",
+      "version": "0.2.0",
+      "description": "Flutter development with official Google skills, Fastlane automation, store publishing, and architecture patterns",
       "source": "./packs/flutter",
       "author": {
         "name": "Smicolon",
@@ -280,7 +280,8 @@
         "android",
         "fastlane",
         "app-store",
-        "google-play"
+        "google-play",
+        "go-router"
       ],
       "agents": [
         "./agents/flutter-architect.md",
@@ -296,6 +297,12 @@
       ],
       "skills": [
         "./skills/flutter-architecture",
+        "./skills/declarative-routing",
+        "./skills/layout-debugger",
+        "./skills/responsive-layout",
+        "./skills/flutter-testing",
+        "./skills/dart-modern-patterns",
+        "./skills/json-serialization",
         "./skills/fastlane-knowledge",
         "./skills/store-publishing"
       ]
