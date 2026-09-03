@@ -10,6 +10,12 @@ whenToUse: >-
 model: inherit
 skills:
   - flutter-architecture
+  - declarative-routing
+  - layout-debugger
+  - responsive-layout
+  - flutter-testing
+  - json-serialization
+  - dart-modern-patterns
   - fastlane-knowledge
 tools:
   - Read

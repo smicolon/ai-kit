@@ -2,11 +2,16 @@
 
 All notable changes to the smi-flutter plugin will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-flutter` to `flutter` as part of ai-kit migration
-- Moved from `plugins/smi-flutter/` to `packs/flutter/`
+### Added
+- Integrated 6 official Google Flutter and Dart agent skills:
+  - `declarative-routing` (`go_router` setup, deep links, and nested shells)
+  - `layout-debugger` (fixing RenderFlex overflowed and unbounded constraints)
+  - `responsive-layout` (LayoutBuilder and adaptive multi-form factor design)
+  - `flutter-testing` (WidgetTester, unit tests, integration tests)
+  - `dart-modern-patterns` (Dart 3 pattern matching, switch expressions, records, sealed classes)
+  - `json-serialization` (immutable models, safe parsing, serialization)
 
 ## [0.1.0] - 2025-01-02
 
