@@ -126,8 +126,8 @@
     },
     {
       "name": "nextjs",
-      "version": "2.1.3",
-      "description": "Next.js standards with 4 agents, 3 auto-enforcing skills, and visual QA",
+      "version": "2.2.0",
+      "description": "Next.js standards with 4 agents, 4 auto-enforcing skills including Vercel React Best Practices, and visual QA",
       "source": "./packs/nextjs",
       "author": {
         "name": "Smicolon",
@@ -159,7 +159,8 @@
       "skills": [
         "./skills/accessibility-validator",
         "./skills/react-form-validator",
-        "./skills/import-convention-enforcer"
+        "./skills/import-convention-enforcer",
+        "./skills/vercel-react-best-practices"
       ]
     },
     {
@@ -564,8 +565,8 @@
     },
     {
       "name": "react-review",
-      "version": "0.1.1",
-      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Produces inline comments, prioritized P0/P1/P2 summaries, and action checklists. Review-only — does not modify code.",
+      "version": "0.2.0",
+      "description": "Four-axis branch review for React and Next.js codebases: architecture, performance, accessibility, and UI/UX. Includes Web Interface Guidelines and React performance skills. Review-only — does not modify code.",
       "source": "./packs/react-review",
       "author": {
         "name": "Smicolon",
@@ -591,6 +592,10 @@
         "./commands/review-perf.md",
         "./commands/review-a11y.md",
         "./commands/review-ui.md"
+      ],
+      "skills": [
+        "./skills/web-design-guidelines",
+        "./skills/react-perf-rules"
       ]
     }
   ]

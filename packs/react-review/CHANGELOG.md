@@ -2,6 +2,13 @@
 
 All notable changes to the react-review pack will be documented in this file.
 
+## [0.2.0] - 2026-09-03
+
+### Added
+- `web-design-guidelines` skill based on modern Web Interface Guidelines
+- `react-perf-rules` skill codifying P0/P1/P2 review criteria across waterfalls, bundle bloat, and re-renders
+- Next.js 15 uncached fetch defaults and `after()` background tasks audit in `review-perf`
+
 ## [0.1.0] - 2026-04-21
 
 ### Added

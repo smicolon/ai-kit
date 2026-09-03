@@ -57,7 +57,8 @@ List modified components, hooks, and any `package.json` / lockfile / config chan
 - **`next/image`** — used for all raster images, with appropriate `sizes` and `priority` on LCP?
 - **`next/font`** — used for web fonts (avoids layout shift, no extra network roundtrip)?
 - **`next/dynamic`** — used for heavy client-only deps (charts, editors, maps)?
-- **App Router caching** — `fetch` calls have intentional `cache` / `next.revalidate` options (not defaulting unintentionally)?
+- **App Router caching (Next.js 15+)** — `fetch` calls are uncached by default (`no-store`); check if intentional or if `next.revalidate` / `force-cache` was omitted unintentionally.
+- **Non-blocking tasks (Next.js 15+)** — secondary work in Server Actions / Route Handlers uses `after()` rather than blocking the response.
 - **Route segment config** — `dynamic`, `revalidate`, `runtime` set where non-default behavior is needed?
 
 **Data fetching** — apply the section matching the detected library

@@ -2,11 +2,12 @@
 
 All notable changes to the smi-nextjs plugin will be documented in this file.
 
-## [Unreleased]
+## [2.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-nextjs` to `nextjs` as part of ai-kit migration
-- Moved from `plugins/smi-nextjs/` to `packs/nextjs/`
+### Added
+- `vercel-react-best-practices` skill integrating Vercel Engineering's 8 impact-ranked performance optimization categories
+- Next.js 15 uncached `fetch` & route handler defaults guidance
+- React 19 `useActionState`, `useOptimistic`, and `after()` server patterns
 
 ## [2.1.0] - 2025-01-02
 
