@@ -1,6 +1,6 @@
 {
   "name": "smicolon-marketplace",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 agents, 46 skills, four-axis React/Next.js branch review, pre-implementation clarification, Infisical secret management, TanStack SPA, Better Auth, onboarding, and TDD dev loops",
   "metadata": {
     "description": "Official marketplace for Smicolon development standards - 16 plugins with 30 specialized agents, 46 auto-enforcing skills, four-axis React/Next.js branch review (architecture, performance, accessibility, UI), pre-implementation flow clarification, Infisical secret management, intelligent engineer onboarding, TanStack Router SPA development, Better Auth integration, Hono Edge framework, Flutter mobile, git worktree management, persistent failure memory, and TDD-based dev loops for Django, NestJS, Next.js, Nuxt.js, Hono, Flutter, TanStack, and system architecture"
@@ -44,7 +44,7 @@
     },
     {
       "name": "django",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "Django standards with 5 agents and 8 auto-enforcing skills including async ORM patterns",
       "source": "./packs/django",
       "author": {
@@ -91,7 +91,7 @@
     },
     {
       "name": "nestjs",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "NestJS standards with 3 agents and 4 auto-enforcing skills including security and testing patterns",
       "source": "./packs/nestjs",
       "author": {
@@ -168,7 +168,7 @@
     },
     {
       "name": "nuxtjs",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "Nuxt.js standards with 3 agents, 3 auto-enforcing skills, Nuxt 4 support, and visual QA",
       "source": "./packs/nuxtjs",
       "author": {
@@ -206,7 +206,7 @@
     },
     {
       "name": "architect",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "description": "System architecture and diagram-as-code with native Mermaid.js and Eraser.io integration",
       "source": "./packs/architect",
       "author": {
@@ -317,7 +317,7 @@
     },
     {
       "name": "hono",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "description": "Hono Edge framework standards with 4 agents and 4 auto-enforcing skills including OpenAPI and streaming for Bun and Cloudflare Workers",
       "source": "./packs/hono",
       "author": {
@@ -360,7 +360,7 @@
     },
     {
       "name": "tanstack-router",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "description": "TanStack Router and TanStack Start full-stack development with 3 agents and 12 skills for React applications",
       "source": "./packs/tanstack-router",
       "author": {
