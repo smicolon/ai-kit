@@ -6,6 +6,7 @@ skills:
   - accessibility-validator
   - react-form-validator
   - import-convention-enforcer
+  - vercel-react-best-practices
 ---
 
 # Next.js Modular Architecture
