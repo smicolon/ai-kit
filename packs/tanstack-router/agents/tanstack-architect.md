@@ -5,6 +5,7 @@ description: >-
 model: inherit
 skills:
   - router-patterns
+  - start-patterns
   - query-patterns
   - form-patterns
   - table-patterns

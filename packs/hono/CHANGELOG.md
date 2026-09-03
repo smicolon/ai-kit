@@ -2,11 +2,12 @@
 
 All notable changes to the smi-hono plugin will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-hono` to `hono` as part of ai-kit migration
-- Moved from `plugins/smi-hono/` to `packs/hono/`
+### Added
+- In-memory `app.request` and CLI testing patterns from `yusukebe/hono-skill`
+- OpenAPI 3.1 & Swagger UI patterns via `@hono/zod-openapi`
+- Server-Sent Events (SSE) and AI streaming patterns (`streamText`, `streamSSE`)
 
 ## [0.1.0] - 2025-01-02
 

@@ -2,11 +2,11 @@
 
 All notable changes to the smi-django plugin will be documented in this file.
 
-## [Unreleased]
+## [2.2.0] - 2026-09-03
 
-### Changed
-- Renamed from `smi-django` to `django` as part of ai-kit migration
-- Moved from `plugins/smi-django/` to `packs/django/`
+### Added
+- Async ORM queries (`aget`, `afirst`, `acreate`) and `CONN_HEALTH_CHECKS` guidance in `performance-optimizer`
+- Django 5.x database default patterns
 
 ## [2.1.0] - 2025-01-02
 

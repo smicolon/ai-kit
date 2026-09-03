@@ -5,6 +5,8 @@ model: inherit
 skills:
   - barrel-export-manager
   - import-convention-enforcer
+  - nestjs-security-validator
+  - nestjs-testing-patterns
 ---
 
 # NestJS Architect

@@ -400,6 +400,39 @@ def organization_summary(self):
     ]
 ```
 
+## Async ORM Queries (Django 5+)
+
+In ASGI applications or async view contexts, **never** execute synchronous ORM operations (`.get()`, `.create()`, `.first()`, iterating querysets) as they block the event loop. Always use Django's native async ORM methods:
+
+```python
+# ❌ WRONG: Blocks event loop in async view
+async def get_user_profile(request, user_id):
+    user = _users_models.User.objects.get(id=user_id)  # Synchronous blocking call!
+    return JsonResponse({'name': user.name})
+
+# ✅ CORRECT: Native async ORM methods
+async def get_user_profile(request, user_id):
+    user = await _users_models.User.objects.aget(id=user_id)
+    return JsonResponse({'name': user.name})
+
+# Async iterations & operations:
+# await queryset.afirst()
+# await queryset.acount()
+# await queryset.aexists()
+# async for item in queryset: ...
+```
+
+### Connection Health Checks
+In `settings.py`, enable health checks with connection pooling to reuse connections safely:
+```python
+DATABASES = {
+    'default': {
+        'CONN_MAX_AGE': 600,       # Keep connections open for 10 minutes
+        'CONN_HEALTH_CHECKS': True, # Test connection before reusing (avoids dead connection errors)
+    }
+}
+```
+
 ## Integration with Testing
 
 ```python

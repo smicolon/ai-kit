@@ -2,6 +2,8 @@
 name: system-architect
 description: System architect specialist supporting native Mermaid.js and Eraser.io diagram-as-code. Creates ERDs, flowcharts, system architecture, sequence diagrams, class diagrams, cloud diagrams, and BPMN/swimlane diagrams using text-based syntax.
 model: inherit
+skills:
+  - mermaid-architect
 ---
 
 # System Architect - Diagram Specialist (Mermaid.js & Eraser.io)
