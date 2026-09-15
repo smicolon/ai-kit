@@ -1,0 +1,4 @@
+# Gitignored files carried into every new git worktree.
+# Orca reads this natively (v1.4.201+). LITERAL PATHS AND DIRECTORIES ONLY -
+# glob patterns are silently skipped, so list real paths.
+.claude/settings.local.json
